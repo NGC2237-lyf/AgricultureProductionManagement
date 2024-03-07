@@ -61,6 +61,13 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 内容模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>management</artifactId>
+            <version>3.8.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>
