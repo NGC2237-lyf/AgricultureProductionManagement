@@ -69,7 +69,7 @@ public class FarmPlaningController {
 
     /*作物种植计划*/
 
-    @GetMapping("/cropPlanting/{pageNum}/{pageSize}/{id}")
+    @GetMapping("/cropPlanting/{id}/{pageNum}/{pageSize}")
     public AjaxResult getCropPlanting(@PathVariable("id") Integer farmId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum,pageSize);
         CropPlantingPlanVo cropPlantingPlanVo = cropPlantingPlanService.getByFarmId(farmId);
@@ -100,7 +100,7 @@ public class FarmPlaningController {
 
     /*灌溉记录*/
 
-    @GetMapping("/irrigationRecord/{pageNum}/{pageSize}/{id}")
+    @GetMapping("/irrigationRecord/{id}/{pageNum}/{pageSize}")
     public AjaxResult getIrrigationRecord(@PathVariable("id") Integer farmId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum,pageSize);
         IrrigationRecordVo irrigationRecordVo = irrigationRecordService.getByFarmId(farmId);

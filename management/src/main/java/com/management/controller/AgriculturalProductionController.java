@@ -45,7 +45,7 @@ public class AgriculturalProductionController {
     private CropGrowthTrackingService cropGrowthTrackingService;
 
     /*土壤监测*/
-    @GetMapping("/soil/{pageNum}/{pageSize}/{id}")
+    @GetMapping("/soil/{id}/{pageNum}/{pageSize}")
     public AjaxResult getSoilTestData(@PathVariable("id") Integer landId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         QueryWrapper<SoilTestData> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("location", landId);
@@ -75,7 +75,7 @@ public class AgriculturalProductionController {
         return AjaxResult.error("查询失败");
     }
 
-    @PostMapping("/soil")
+    @PostMapping("/soil/insert")
     public AjaxResult insertSoilTestData(SoilTestData soilTestData) {
         return soilTestDataService.save(soilTestData) ? AjaxResult.success("添加成功") : AjaxResult.error("添加失败");
     }
@@ -92,7 +92,7 @@ public class AgriculturalProductionController {
 
     /*作物生长状况跟踪*/
 
-    @PostMapping("/crop")
+    @PostMapping("/crop/insert")
     public AjaxResult insertCropPlanting(@RequestBody List<CropGrowthTracking> cropGrowthTrackings) {
         return cropGrowthTrackingService.saveBatch(cropGrowthTrackings) ? AjaxResult.success("添加成功") : AjaxResult.error("添加失败");
     }
@@ -107,7 +107,7 @@ public class AgriculturalProductionController {
         return cropGrowthTrackingService.updateById(cropGrowthTracking) ? AjaxResult.success("更新成功") : AjaxResult.error("更新失败");
     }
 
-    @GetMapping("/crop/{pageNum}/{pageSize}/{id}")
+    @GetMapping("/crop/{id}/{pageNum}/{pageSize}")
     public AjaxResult getCropPlanting(@PathVariable("id") Integer farmId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
         List<CropGrowthTrackingVo> cropGrowthTrackingVos = cropGrowthTrackingService.getCropGrowthTracking(farmId);
@@ -127,7 +127,7 @@ public class AgriculturalProductionController {
     public AjaxResult getAnswer(@RequestParam("q") String question) {
         String solution = ChatGgtUtils.sendQuestion(question);
         if (StringUtils.isEmpty(solution)) {
-            return AjaxResult.error("暂无答案");
+            return AjaxResult.warn("暂无答案");
         }
         return AjaxResult.success("成功",solution);
     }

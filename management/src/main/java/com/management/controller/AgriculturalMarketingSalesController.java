@@ -11,6 +11,7 @@ import com.management.service.impl.AgriculturalProductServiceImpl;
 import com.management.utils.DateUtils;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.PageUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,9 @@ public class AgriculturalMarketingSalesController {
     @Autowired
     private AgriculturalProductPriceService agriculturalProductPriceService;
 
-    @GetMapping("/products/{pageNum}/{pageSize}")
+    /*农产品管理*/
+
+    /*@GetMapping("/products/{pageNum}/{pageSize}")
     public AjaxResult getAllProducts(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProduct> agriculturalProducts = agriculturalProductService.getBaseMapper().selectList(null);
@@ -50,15 +53,23 @@ public class AgriculturalMarketingSalesController {
             return AjaxResult.success("查询成功", agriculturalProducts);
         }
         return AjaxResult.error("查询失败");
-    }
+    }*/
 
-    @GetMapping("/products/{id}")
-    public AjaxResult getProducts(@PathVariable("id") Integer productId) {
-        AgriculturalProduct agriculturalProduct = agriculturalProductService.getById(productId);
-        if (Objects.nonNull(agriculturalProduct)) {
-            agriculturalProduct.setExpirationDate(DateUtils.toFormatDate(agriculturalProduct.getExpirationDate()));
-            agriculturalProduct.setHarvestDate(DateUtils.toFormatDate(agriculturalProduct.getHarvestDate()));
-            return AjaxResult.success("查询成功", agriculturalProduct);
+    @GetMapping("/products/{pageNum}/{pageSize}")
+    public AjaxResult getProducts(@RequestParam("p") String productName,@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+        QueryWrapper<AgriculturalProduct> queryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(productName)) {
+            queryWrapper.like("product_name", productName);
+        }
+        PageUtils.startPage(pageNum, pageSize);
+        List<AgriculturalProduct> agriculturalProducts = agriculturalProductService.getBaseMapper().selectList(null);
+        PageUtils.clearPage();
+        if (!ObjectUtils.isEmpty(agriculturalProducts)) {
+            agriculturalProducts.forEach(agriculturalProduct -> {
+                agriculturalProduct.setExpirationDate(DateUtils.toFormatDate(agriculturalProduct.getExpirationDate()));
+                agriculturalProduct.setHarvestDate(DateUtils.toFormatDate(agriculturalProduct.getHarvestDate()));
+            });
+            return AjaxResult.success("查询成功", agriculturalProducts);
         }
         return AjaxResult.error("查询失败");
     }
@@ -78,6 +89,8 @@ public class AgriculturalMarketingSalesController {
         return agriculturalProductService.removeBatchByIds(productIds) ? AjaxResult.success("删除成功") : AjaxResult.error("删除失败");
     }
 
+    /*农产品推荐*/
+
     @GetMapping("/products/price/{pageNum}/{pageSize}")
     public AjaxResult getAllProductPrice(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
@@ -95,10 +108,12 @@ public class AgriculturalMarketingSalesController {
     }
 
     @PostMapping("/products/price")
-    public AjaxResult getProductPrice(@RequestParam("word") String word) {
+    public AjaxResult getProductPrice(@RequestParam("w") String word) {
         List<AgriculturalProductPrice> productPrices = agriculturalProductService.findData(word);
         return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.error("查询失败");
     }
+
+    /*农产品销售*/
 
     @GetMapping("/products/sales/{pageNum}/{pageSize}")
     public AjaxResult getAllProductSales(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
@@ -114,7 +129,7 @@ public class AgriculturalMarketingSalesController {
         return AjaxResult.error("查询失败");
     }
 
-    @GetMapping("/products/sales/{pageNum}/{pageSize}/{id}")
+    @GetMapping("/products/sales/{id}/{pageNum}/{pageSize}")
     public AjaxResult getProductSales(@PathVariable("id") Integer productId, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProductSalesVo> agriculturalProductSales = agriculturalProductSalesService.getAgriculturalProductSales(productId);
