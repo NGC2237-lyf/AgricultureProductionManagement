@@ -14,14 +14,14 @@ import java.io.IOException;
 
 /**
  * @author TokisakiKurumi
- * @className ChatGPTUtils
+ * @className ChatGgtUtils
  * @date 2024/3/7
  * @description
  **/
-public class ChatGPTUtils {
+public class ChatGgtUtils {
 
-    private static String URL = "https://api.chatanywhere.com.cn/v1/chat/completions";
-    private static String API_KEY = "Bearer sk-IzMUtjQ5gofuUlFLeBRqGJJR4EqV3gXy3dyruk0XVlgBB80M";
+    private static final String URL = "https://api.chatanywhere.com.cn/v1/chat/completions";
+    private static final String API_KEY = "Bearer sk-IzMUtjQ5gofuUlFLeBRqGJJR4EqV3gXy3dyruk0XVlgBB80M";
 
     public static String sendQuestion(String question) {
         String jsonBody = "{"

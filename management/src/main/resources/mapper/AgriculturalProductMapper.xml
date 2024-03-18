@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.AgriculturalProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.AgriculturalProduct">
+            <id property="productId" column="product_id" jdbcType="INTEGER"/>
+            <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+            <result property="category" column="category" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="origin" column="origin" jdbcType="VARCHAR"/>
+            <result property="harvestDate" column="harvest_date" jdbcType="DATE"/>
+            <result property="quantity" column="quantity" jdbcType="DECIMAL"/>
+            <result property="unit" column="unit" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="expirationDate" column="expiration_date" jdbcType="DATE"/>
+            <result property="storageConditions" column="storage_conditions" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        product_id,product_name,category,
+        description,origin,harvest_date,
+        quantity,unit,price,
+        expiration_date,storage_conditions
+    </sql>
+</mapper>

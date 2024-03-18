@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.CropPlantingPlanMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.CropPlantingPlan">
+            <id property="planId" column="plan_id" jdbcType="INTEGER"/>
+            <result property="farmId" column="farm_id" jdbcType="INTEGER"/>
+            <result property="year" column="year" jdbcType="INTEGER"/>
+            <result property="season" column="season" jdbcType="VARCHAR"/>
+            <result property="landId" column="land_id" jdbcType="INTEGER"/>
+            <result property="cropType" column="crop_type" jdbcType="VARCHAR"/>
+            <result property="plantingArea" column="planting_area" jdbcType="DECIMAL"/>
+            <result property="expectedYield" column="expected_yield" jdbcType="DECIMAL"/>
+            <result property="plantingDate" column="planting_date" jdbcType="DATE"/>
+            <result property="harvestDate" column="harvest_date" jdbcType="DATE"/>
+            <result property="plantingMethod" column="planting_method" jdbcType="VARCHAR"/>
+            <result property="fertilizerUsage" column="fertilizer_usage" jdbcType="VARCHAR"/>
+            <result property="pesticideUsage" column="pesticide_usage" jdbcType="VARCHAR"/>
+            <result property="notes" column="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="VoResultMap" type="com.management.entity.vo.CropPlantingPlanVo">
+        <id property="planId" column="plan_id" jdbcType="INTEGER"/>
+        <result property="farmId" column="farm_id" jdbcType="INTEGER"/>
+        <result property="farmName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="year" column="year" jdbcType="INTEGER"/>
+        <result property="season" column="season" jdbcType="VARCHAR"/>
+        <result property="landId" column="land_id" jdbcType="INTEGER"/>
+        <result property="cropType" column="crop_type" jdbcType="VARCHAR"/>
+        <result property="plantingArea" column="planting_area" jdbcType="DECIMAL"/>
+        <result property="expectedYield" column="expected_yield" jdbcType="DECIMAL"/>
+        <result property="plantingDate" column="planting_date" jdbcType="DATE"/>
+        <result property="harvestDate" column="harvest_date" jdbcType="DATE"/>
+        <result property="plantingMethod" column="planting_method" jdbcType="VARCHAR"/>
+        <result property="fertilizerUsage" column="fertilizer_usage" jdbcType="VARCHAR"/>
+        <result property="pesticideUsage" column="pesticide_usage" jdbcType="VARCHAR"/>
+        <result property="notes" column="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        plan_id,farm_id,year,
+        season,land_id,crop_type,
+        planting_area,expected_yield,planting_date,
+        harvest_date,planting_method,fertilizer_usage,
+        pesticide_usage,notes
+    </sql>
+    <select id="getByFarmId" resultType="com.management.entity.vo.CropPlantingPlanVo" resultMap="VoResultMap">
+        select * from sys_user s ,crop_planting_plan p where s.user_id = p.farm_id and p.farm_id = #{farmId}
+    </select>
+    <select id="getAll" resultType="com.management.entity.vo.CropPlantingPlanVo" resultMap="VoResultMap">
+        select * from sys_user s ,crop_planting_plan p where s.user_id = p.farm_id
+    </select>
+</mapper>

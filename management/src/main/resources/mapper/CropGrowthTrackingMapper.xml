@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.CropGrowthTrackingMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.CropGrowthTracking">
+            <id property="trackingId" column="tracking_id" jdbcType="INTEGER"/>
+            <result property="farmId" column="farm_id" jdbcType="INTEGER"/>
+            <result property="landId" column="land_id" jdbcType="INTEGER"/>
+            <result property="cropType" column="crop_type" jdbcType="VARCHAR"/>
+            <result property="growthStage" column="growth_stage" jdbcType="VARCHAR"/>
+            <result property="observationDate" column="observation_date" jdbcType="DATE"/>
+            <result property="height" column="height" jdbcType="DECIMAL"/>
+            <result property="canopyWidth" column="canopy_width" jdbcType="DECIMAL"/>
+            <result property="leafColor" column="leaf_color" jdbcType="VARCHAR"/>
+            <result property="pestPresence" column="pest_presence" jdbcType="VARCHAR"/>
+            <result property="diseasePresence" column="disease_presence" jdbcType="VARCHAR"/>
+            <result property="nutrientDeficiency" column="nutrient_deficiency" jdbcType="VARCHAR"/>
+            <result property="notes" column="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="VoResultMap" type="com.management.entity.vo.CropGrowthTrackingVo">
+        <id property="trackingId" column="tracking_id" jdbcType="INTEGER"/>
+        <result property="farmId" column="farm_id" jdbcType="INTEGER"/>
+        <result property="farmName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="landId" column="land_id" jdbcType="INTEGER"/>
+        <result property="cropType" column="crop_type" jdbcType="VARCHAR"/>
+        <result property="growthStage" column="growth_stage" jdbcType="VARCHAR"/>
+        <result property="observationDate" column="observation_date" jdbcType="DATE"/>
+        <result property="height" column="height" jdbcType="DECIMAL"/>
+        <result property="canopyWidth" column="canopy_width" jdbcType="DECIMAL"/>
+        <result property="leafColor" column="leaf_color" jdbcType="VARCHAR"/>
+        <result property="pestPresence" column="pest_presence" jdbcType="VARCHAR"/>
+        <result property="diseasePresence" column="disease_presence" jdbcType="VARCHAR"/>
+        <result property="nutrientDeficiency" column="nutrient_deficiency" jdbcType="VARCHAR"/>
+        <result property="notes" column="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        tracking_id,farm_id,land_id,
+        crop_type,growth_stage,observation_date,
+        height,canopy_width,leaf_color,
+        pest_presence,disease_presence,nutrient_deficiency,
+        notes
+    </sql>
+    <select id="getByFarmId" resultType="com.management.entity.vo.CropGrowthTrackingVo" resultMap="VoResultMap">
+        select * from crop_growth_tracking c ,sys_user s where c.farm_id = #{farmId} and c.farm_id = s.user_id
+    </select>
+    <select id="getAll" resultType="com.management.entity.vo.CropGrowthTrackingVo" resultMap="VoResultMap">
+        select * from crop_growth_tracking c ,sys_user s where c.farm_id = s.user_id
+    </select>
+</mapper>

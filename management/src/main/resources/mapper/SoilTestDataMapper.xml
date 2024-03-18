@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.SoilTestDataMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.SoilTestData">
+            <id property="testId" column="test_id" jdbcType="INTEGER"/>
+            <result property="location" column="location" jdbcType="INTEGER"/>
+            <result property="testDate" column="test_date" jdbcType="DATE"/>
+            <result property="phLevel" column="ph_level" jdbcType="DECIMAL"/>
+            <result property="nitrogen" column="nitrogen" jdbcType="DECIMAL"/>
+            <result property="phosphorus" column="phosphorus" jdbcType="DECIMAL"/>
+            <result property="potassium" column="potassium" jdbcType="DECIMAL"/>
+            <result property="organicMatter" column="organic_matter" jdbcType="DECIMAL"/>
+            <result property="texture" column="texture" jdbcType="VARCHAR"/>
+            <result property="salinity" column="salinity" jdbcType="DECIMAL"/>
+            <result property="soilMoisture" column="soil_moisture" jdbcType="DECIMAL"/>
+            <result property="soilType" column="soil_type" jdbcType="VARCHAR"/>
+            <result property="notes" column="notes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        test_id,location,test_date,
+        ph_level,nitrogen,phosphorus,
+        potassium,organic_matter,texture,
+        salinity,soil_moisture,soil_type,
+        notes
+    </sql>
+</mapper>

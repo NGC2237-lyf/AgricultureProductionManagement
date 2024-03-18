@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.AgriculturalProductSalesMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.AgriculturalProductSales">
+            <id property="saleId" column="sale_id" jdbcType="INTEGER"/>
+            <result property="productId" column="product_id" jdbcType="INTEGER"/>
+            <result property="saleDate" column="sale_date" jdbcType="DATE"/>
+            <result property="quantity" column="quantity" jdbcType="DECIMAL"/>
+            <result property="unitPrice" column="unit_price" jdbcType="DECIMAL"/>
+            <result property="totalPrice" column="total_price" jdbcType="DECIMAL"/>
+            <result property="customerName" column="customer_name" jdbcType="VARCHAR"/>
+            <result property="customerContact" column="customer_contact" jdbcType="VARCHAR"/>
+            <result property="paymentMethod" column="payment_method" jdbcType="VARCHAR"/>
+            <result property="deliveryAddress" column="delivery_address" jdbcType="VARCHAR"/>
+            <result property="customerFeedback" column="customer_feedback" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="VoResultMap" type="com.management.entity.vo.AgriculturalProductSalesVo">
+        <id property="saleId" column="sale_id" jdbcType="INTEGER"/>
+        <result property="productId" column="product_id" jdbcType="INTEGER"/>
+        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+        <result property="saleDate" column="sale_date" jdbcType="DATE"/>
+        <result property="quantity" column="quantity" jdbcType="DECIMAL"/>
+        <result property="unitPrice" column="unit_price" jdbcType="DECIMAL"/>
+        <result property="totalPrice" column="total_price" jdbcType="DECIMAL"/>
+        <result property="customerName" column="customer_name" jdbcType="VARCHAR"/>
+        <result property="customerContact" column="customer_contact" jdbcType="VARCHAR"/>
+        <result property="paymentMethod" column="payment_method" jdbcType="VARCHAR"/>
+        <result property="deliveryAddress" column="delivery_address" jdbcType="VARCHAR"/>
+        <result property="customerFeedback" column="customer_feedback" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sale_id,product_id,sale_date,
+        quantity,unit_price,total_price,
+        customer_name,customer_contact,payment_method,
+        delivery_address,customer_feedback
+    </sql>
+    <select id="getAll" resultType="com.management.entity.vo.AgriculturalProductSalesVo" resultMap="VoResultMap">
+        select * from agricultural_product_sales aps, agricultural_product ap where aps.product_id = ap.product_id
+    </select>
+    <select id="getAgriculturalProductSales" resultType="com.management.entity.vo.AgriculturalProductSalesVo" resultMap="VoResultMap">
+        select  * from agricultural_product_sales aps, agricultural_product ap where aps.product_id = ap.product_id
+        and ap.product_id = #{productId}
+    </select>
+</mapper>

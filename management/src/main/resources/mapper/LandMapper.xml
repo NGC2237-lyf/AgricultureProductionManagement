@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.management.mapper.LandMapper">
+
+    <resultMap id="BaseResultMap" type="com.management.entity.Land">
+            <id property="landId" column="land_id" jdbcType="INTEGER"/>
+            <result property="location" column="location" jdbcType="VARCHAR"/>
+            <result property="area" column="area" jdbcType="DECIMAL"/>
+            <result property="topography" column="topography" jdbcType="VARCHAR"/>
+            <result property="soilType" column="soil_type" jdbcType="VARCHAR"/>
+            <result property="ownership" column="ownership" jdbcType="BIGINT"/>
+            <result property="landUse" column="land_use" jdbcType="VARCHAR"/>
+            <result property="ecologicalEnvironment" column="ecological_environment" jdbcType="VARCHAR"/>
+            <result property="marketValue" column="market_value" jdbcType="DECIMAL"/>
+            <result property="planningUse" column="planning_use" jdbcType="VARCHAR"/>
+            <result property="ownerIntent" column="owner_intent" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="VoResultMap" type="com.management.entity.vo.LandVo">
+        <id property="landId" column="land_id" jdbcType="INTEGER"/>
+        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="DECIMAL"/>
+        <result property="topography" column="topography" jdbcType="VARCHAR"/>
+        <result property="soilType" column="soil_type" jdbcType="VARCHAR"/>
+        <result property="ownership" column="user_name" jdbcType="VARCHAR"/>
+        <result property="ownerId" column="user_id" jdbcType="BIGINT"/>
+        <result property="landUse" column="land_use" jdbcType="VARCHAR"/>
+        <result property="ecologicalEnvironment" column="ecological_environment" jdbcType="VARCHAR"/>
+        <result property="marketValue" column="market_value" jdbcType="DECIMAL"/>
+        <result property="planningUse" column="planning_use" jdbcType="VARCHAR"/>
+        <result property="ownerIntent" column="owner_intent" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        land_id,location,area,
+        topography,soil_type,ownership,
+        land_use,ecological_environment,market_value,
+        planning_use,owner_intent
+    </sql>
+    <select id="getByFarmId" resultType="com.management.entity.vo.LandVo" resultMap="VoResultMap">
+        select * from sys_user s, land l where l.ownership = #{farmId} and s.user_id = l.ownership
+    </select>
+    <select id="getAll" resultType="com.management.entity.vo.LandVo" resultMap="VoResultMap">
+        select * from sys_user s, land l where s.user_id = l.ownership
+    </select>
+</mapper>
