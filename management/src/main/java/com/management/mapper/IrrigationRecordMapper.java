@@ -16,7 +16,7 @@ import java.util.List;
 */
 @Mapper
 public interface IrrigationRecordMapper extends BaseMapper<IrrigationRecord> {
-    IrrigationRecordVo getByFarmId(@Param("farmId") Integer farmId);
+    List<IrrigationRecordVo> getByFarmId(@Param("farmId") Integer farmId);
 
     List<IrrigationRecordVo> getAll();
 }

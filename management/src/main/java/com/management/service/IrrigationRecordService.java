@@ -12,7 +12,7 @@ import java.util.List;
 * @createDate 2024-03-07 21:03:05
 */
 public interface IrrigationRecordService extends IService<IrrigationRecord> {
-    IrrigationRecordVo getByFarmId(Integer farmId);
+    List<IrrigationRecordVo> getByFarmId(Integer farmId);
 
     List<IrrigationRecordVo> getAll();
 }

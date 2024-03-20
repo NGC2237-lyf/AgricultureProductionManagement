@@ -26,12 +26,14 @@ public class IrrigationRecordServiceImpl extends ServiceImpl<IrrigationRecordMap
     private IrrigationRecordMapper irrigationRecordMapper;
 
     @Override
-    public IrrigationRecordVo getByFarmId(Integer farmId) {
-        IrrigationRecordVo irrigationRecordVo = irrigationRecordMapper.getByFarmId(farmId);
-        if (Objects.nonNull(irrigationRecordVo)) {
-            irrigationRecordVo.setIrrigationDate(DateUtils.toFormatDate(irrigationRecordVo.getIrrigationDate()));
+    public List<IrrigationRecordVo> getByFarmId(Integer farmId) {
+        List<IrrigationRecordVo> irrigationRecordVos = irrigationRecordMapper.getByFarmId(farmId);
+        if (Objects.nonNull(irrigationRecordVos)) {
+            irrigationRecordVos.forEach(irrigationRecordVo -> {
+                irrigationRecordVo.setIrrigationDate(DateUtils.toFormatDate(irrigationRecordVo.getIrrigationDate()));
+            });
         }
-        return irrigationRecordVo;
+        return irrigationRecordVos;
     }
 
     @Override

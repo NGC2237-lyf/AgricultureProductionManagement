@@ -1,5 +1,6 @@
 package com.management.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.management.entity.CropPlantingPlan;
 import com.management.entity.IrrigationRecord;
 import com.management.entity.Land;
@@ -50,7 +51,8 @@ public class FarmPlaningController {
         PageUtils.startPage(pageNum,pageSize);
         List<LandVo> landVoS = landService.getAll();
         PageUtils.clearPage();
-        return !ObjectUtils.isEmpty(landVoS) ? AjaxResult.success("查询成功",landVoS) : AjaxResult.error("查询失败");
+        PageInfo<LandVo> pageInfo = new PageInfo<>(landVoS);
+        return !ObjectUtils.isEmpty(landVoS) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @PostMapping("/land/update")
@@ -103,9 +105,10 @@ public class FarmPlaningController {
     @GetMapping("/irrigationRecord/{id}/{pageNum}/{pageSize}")
     public AjaxResult getIrrigationRecord(@PathVariable("id") Integer farmId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum,pageSize);
-        IrrigationRecordVo irrigationRecordVo = irrigationRecordService.getByFarmId(farmId);
+        List<IrrigationRecordVo> irrigationRecordVos = irrigationRecordService.getByFarmId(farmId);
         PageUtils.clearPage();
-        return Objects.nonNull(irrigationRecordVo) ? AjaxResult.success("查询成功",irrigationRecordVo) : AjaxResult.error("查询失败");
+        PageInfo<IrrigationRecordVo> pageInfo = new PageInfo<>(irrigationRecordVos);
+        return Objects.nonNull(pageInfo) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/irrigationRecord/{pageNum}/{pageSize}")
