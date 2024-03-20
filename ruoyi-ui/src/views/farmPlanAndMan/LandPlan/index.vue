@@ -7,7 +7,7 @@
 
 <script>
 import Table from '/src/components/Table/Table.vue';
-import { getPlanList } from '@/api/data/LandPlaning'
+import { deletePlan, getPlanList, Land, updatePlan } from '@/api/data/getInfoData'
 
 export default {
   components: {
@@ -15,14 +15,10 @@ export default {
   },
   data() {
     return {
-      landData: [ // 假数据
-        { landId: 1, location: "地点A", area: 1000, topography: "山地", soilType: "黄土", ownership: "张三", landUse: "农田", ecologicalEnvironment: "生态良好", marketValue: 50000, planningUse: "农业", ownerIntent: "发展农业" },
-        { landId: 2, location: "地点B", area: 2000, topography: "平原", soilType: "沙土", ownership: "李四", landUse: "工地", ecologicalEnvironment: "环境污染", marketValue: 100000, planningUse: "工业", ownerIntent: "建设工厂" },
-        { landId: 3, location: "地点C", area: 1500, topography: "湿地", soilType: "泥土", ownership: "王五", landUse: "公园", ecologicalEnvironment: "生态保护", marketValue: 80000, planningUse: "公共", ownerIntent: "绿化城市" }
-      ],
+      landData: [],
       totalNum:20,
       tableColumns: [
-        { prop: 'landId', label: '土地编号',type: "input" },
+        { prop: 'landId', label: '土地编号',type: "input",show:false },
         { prop: 'location', label: '地理位置' ,type: "input"},
         { prop: 'area', label: '土地面积（平方米）',type: "input" },
         { prop: 'topography', label: '土地形态' ,type: "input"},
@@ -37,19 +33,34 @@ export default {
     };
   },
  async created() {
-   const res = await getPlanList(1,10)
-   console.log(res)
-   this.landData = res.data
+   await this.getInfo();
   },
   methods: {
+    async getInfo(){
+      const res = await getPlanList(Land,1,10)
+      this.landData = res.data.list
+      this.totalNum = res.data.total
+    },
     // 删除土地信息
-    handleDelete(index) {
-      this.landData.splice(index, 1); // 从 landData 中删除指定索引的土地信息
+   async handleDelete(index) {
+      const res = await deletePlan(Land,[this.landData[index].landId])
+     if(res.code === 200){
+       this.$message.success('删除成功')
+     }else {
+       this.$message.error('删除失败')
+     }
+      await this.getInfo()
     },
     // 保存土地信息
-    handleSave(data) {
+    async handleSave(data) {
       // 根据数据中的信息进行保存操作，这里可以发送请求给后端或者进行其他操作
-      console.log('保存土地信息:', data);
+      const res = await updatePlan(Land,data)
+      if(res.code === 200){
+        this.$message.success('更新成功')
+      }else {
+        this.$message.error('更新失败')
+      }
+      await this.getInfo()
     },
     // 添加土地信息
     handleAdd(data) {
