@@ -1,6 +1,12 @@
 <template>
   <div>
-    <Chat title="客服聊天" :height="400" @send="sendMessage" ref="chatRef" />
+    <Chat
+      title="客服聊天"
+      :height="400"
+      :width="1200"
+      background-color="#1f2d3d"
+      @send="sendMessage"
+      ref="chatRef" />
   </div>
 </template>
 

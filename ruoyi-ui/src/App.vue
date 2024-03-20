@@ -10,10 +10,17 @@
         placement="top"
         width="450"
         trigger="click"
-        :popper-class="['bubble-popover', showBubble ? 'bubble-popover-show' : '']"
+        :popper-class="['bubble-popover', showBubble ? 'bubble-popover-show' : ''].join(' ')"
       >
-        <Chat title="智能助手" :height="400" :width="400" @send="sendMessage" ref="chatRef" />
-        <el-button type="text" slot="reference">智能助手</el-button>
+        <Chat
+          title="智能助手"
+          :height="400"
+          :width="400"
+          @send="sendMessage"
+          ref="chatRef"
+          chatUser="助手"
+        />
+        <el-button type="text"  icon="el-icon-chat-line-round" slot="reference">智能助手</el-button>
       </el-popover>
     </div>
   </div>
@@ -85,4 +92,4 @@ export default {
   color: #fff;
 }
 </style>
-</style>
+

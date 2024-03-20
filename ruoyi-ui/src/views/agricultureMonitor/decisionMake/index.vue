@@ -1,14 +1,24 @@
 <template>
   <div>
-    <Chat title="智能决策" :height="400" @send="sendMessage" ref="chatRef" />
+    <Chat
+      title="智能决策"
+      :height="400"
+      :width="1200"
+      background-color="#1f2d3d"
+      @send="sendMessage"
+      ref="chatRef"
+      chat-user="建议"
+    />
   </div>
 </template>
 
 <script>
 import Chat from "@/components/Chat/index.vue";
+import Navbar from '@/layout/components/Navbar.vue'
 
 export default {
   components: {
+    Navbar,
     Chat
   },
   methods: {
@@ -25,6 +35,4 @@ export default {
   }
 }
 </script>
-
-<!-- 样式可以根据需要添加 -->
 

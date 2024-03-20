@@ -23,9 +23,9 @@
           </div>
         </div>
       </div>
-      <div class="other-information"  >
+      <div class="other-information">
         <h2>销售数据</h2>
-        <div >
+        <div>
           <line-chart
             :chart-width="'70vw'"
             :chart-height="'500px'"
@@ -38,7 +38,6 @@
         </div>
       </div>
     </div>
-
 
 
     <!-- 右侧的天气组件 -->
@@ -59,8 +58,9 @@
 </template>
 
 <script>
-import WeatherWidget from '@/components/Weather/index.vue';
+import WeatherWidget from '@/components/Weather/index.vue'
 import LineChart from '@/components/LineChart/index.vue'
+import { getWeather } from '@/api/data/weather'
 
 export default {
   components: {
@@ -85,37 +85,40 @@ export default {
       ],
       hotProducts: [
         { id: 1, name: '苹果', image: 'path_to_your_image', description: '新鲜美味的苹果，产自XXX地区。' },
-        { id: 2, name: '橙子', image: 'path_to_your_image', description: '酸甜可口的橙子，适合各种场合食用。' },
+        { id: 2, name: '橙子', image: 'path_to_your_image', description: '酸甜可口的橙子，适合各种场合食用。' }
         // 可以继续添加更多热门农产品
       ],
       agriculturalNews: [
         { id: 1, title: '农业技术进步', description: '最新的农业技术为农民带来了丰收的希望。' },
-        { id: 2, title: '农产品市场行情', description: '近期农产品价格波动较大，需要密切关注市场动态。' },
+        { id: 2, title: '农产品市场行情', description: '近期农产品价格波动较大，需要密切关注市场动态。' }
         // 可以继续添加更多农业资讯
       ]
-    };
+    }
   },
-  mounted() {
-    this.fetchWeatherData();
+  async created() {
+    await this.fetchWeatherData()
   },
   methods: {
-    fetchWeatherData() {
+    async fetchWeatherData() {
       // 模拟天气数据获取
-      setTimeout(() => {
-        this.weatherData = {
-          weatherData: 'https://img.ixintu.com/download/jpg/202001/9c87e06f208363c12d1a8a2d582763d4.jpg!con', // 替换为实际的天气图标URL
-          condition: '晴天', // 替换为实际的天气情况
-          temperature: '20', // 替换为实际的温度
-          humidity: '50%', // 替换为实际的湿度
-          windSpeed: '10m/s' // 替换为实际的风速
-        };
-      }, 1000);
+      const res = await getWeather()
+      const weather = JSON.parse(res.data).daily[0]
+      this.weatherData = {
+        iconCode: weather.iconDay,
+        condition: weather.textDay,
+        temperatureMax: weather.tempMax,
+        temperatureMin: weather.tempMin,
+        humidity: weather.humidity,
+        windSpeed: weather.windSpeedDay,
+        sunrise: weather.sunrise,
+        sunset: weather.sunset
+      }
     },
     handleRefreshWeather() {
-      this.fetchWeatherData();
+      this.fetchWeatherData()
     }
   }
-};
+}
 </script>
 
 <style scoped>

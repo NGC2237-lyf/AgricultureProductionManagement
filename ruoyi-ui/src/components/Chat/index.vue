@@ -1,13 +1,13 @@
 <template>
-  <div class="chat-container" :style="{ maxWidth: `${width}px`, minWidth: `${width}px` }">
+  <div class="chat-container" :style="{ maxWidth: `${width}px`, minWidth: `${width}px`}">
     <h2 class="chat-title">{{ title }}</h2>
     <el-row>
       <el-col :span="24">
-        <div class="message-box" :style="{ maxHeight: `${height}px`, minHeight: `${height}px` }">
+        <div class="message-box" :style="{ maxHeight: `${height}px`, minHeight: `${height}px`,background:`${backgroundColor}` }">
           <div v-for="(message, index) in messages" :key="index"
                :class="message.sender === 'user' ? 'user-message' : 'response-message'"
           >
-            <el-avatar v-if="message.sender === 'response'" class="avatar" alt="Response Avatar">客服</el-avatar>
+            <el-avatar v-if="message.sender === 'response'" class="avatar" alt="Response Avatar">{{chatUser}}</el-avatar>
             <div class="message-content"  :style="{ maxWidth: `${width/3}px`, minWidth: `${width/3}px` }">
               {{ message.text }}
             </div>
@@ -41,9 +41,17 @@ export default {
       type: Number,
       default: 800
     },
+    chatUser:{
+      type:   String,
+      default: '客服'
+    },
     height: {
       type: Number,
       default: 600
+    },
+    backgroundColor: {
+      type: String,
+      default: '#f5f5f5'
     },
     placeholder: {
       type: String,

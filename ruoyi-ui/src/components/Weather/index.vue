@@ -10,17 +10,24 @@
           <el-icon name="location"></el-icon>
           <span>{{ location }}</span>
         </div>
-        <div class="weather-condition">
-          <el-image v-if="weather.weatherData" :src="weather.weatherData" class="weather-icon" alt="weather icon"></el-image>
-          <span>{{ weather.condition }}</span>
+        <div  style="margin-top: 10px;margin-bottom: 10px">
+          <i style="font-size: 50px" :class="'qi-'+weather.iconCode"></i>
+          <span style="margin-left: 20px;line-height: 50px;">{{ weather.condition }}</span>
         </div>
         <div class="weather-temperature">
-          <span>{{ weather.temperature }}</span>
+          <span>{{ weather.temperatureMax }}</span>
+          <span>°C</span>
+          <span style="margin-left: 10px;margin-right: 10px">——</span>
+          <span>{{ weather.temperatureMin }}</span>
           <span>°C</span>
         </div>
         <div class="weather-details">
           <span>{{ humidityLabel }}: {{ weather.humidity }}</span>
           <span>{{ windSpeedLabel }}: {{ weather.windSpeed }}</span>
+        </div>
+        <div class="weather-details">
+          <span>{{ sunrise }}: {{ weather.sunrise }}</span>
+          <span>{{ sunset }}: {{ weather.sunset }}</span>
         </div>
       </div>
     </el-card>
@@ -50,14 +57,25 @@ export default {
       type: String,
       default: '风速'
     },
+    sunrise: {
+      type: String,
+      default: '日出'
+    },
+    sunset: {
+      type: String,
+      default: '日落'
+    },
     weatherData: {
       type: Object,
       default: () => ({
-        imageUrlData: '',
+        iconCode: '',
         condition: '',
-        temperature: '',
+        temperatureMax: '',
+        temperatureMin:"",
         humidity: '',
-        windSpeed: ''
+        windSpeed: '',
+        sunset:"",
+        sunrise:""
       })
     }
   },
@@ -98,7 +116,7 @@ export default {
 }
 
 .weather-info {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .weather-location {

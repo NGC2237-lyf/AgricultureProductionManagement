@@ -7,6 +7,7 @@
 
 <script>
 import Table from '/src/components/Table/Table.vue';
+import { getPlanList } from '@/api/data/LandPlaning'
 
 export default {
   components: {
@@ -34,6 +35,11 @@ export default {
         { prop: 'ownerIntent', label: '土地所有者的意愿和目标',type: "input" }
       ]
     };
+  },
+ async created() {
+   const res = await getPlanList(1,10)
+   console.log(res)
+   this.landData = res.data
   },
   methods: {
     // 删除土地信息

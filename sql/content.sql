@@ -149,7 +149,7 @@ CREATE TABLE agricultural_product_price
     product_name VARCHAR(255),                                     -- 产品名称
     description  TEXT,                                             -- 描述
     unit         VARCHAR(50),                                      -- 单位
-    price        DECIMAL(10, 2),                                   -- 单价（单位：元）
+    price        DECIMAL(10, 2)                                   -- 单价（单位：元）
 )engine=innodb default charset=utf8mb4;
 
 INSERT INTO agricultural_product_price (product_id, product_name, description, unit, price)
