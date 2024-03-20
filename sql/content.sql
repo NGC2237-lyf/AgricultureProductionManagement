@@ -149,14 +149,13 @@ CREATE TABLE agricultural_product_price
     product_name VARCHAR(255),                                     -- 产品名称
     description  TEXT,                                             -- 描述
     unit         VARCHAR(50),                                      -- 单位
-    price        DECIMAL(10, 2),                                   -- 单价（单位：元）
+    price        DECIMAL(10, 2)                                    -- 单价（单位：元）
 )engine=innodb default charset=utf8mb4;
 
 INSERT INTO agricultural_product_price (product_id, product_name, description, unit, price)
-VALUES
-    (1, '小麦', '新鲜小麦价格', '公斤', 2.50),
-    (2, '玉米', '新鲜玉米价格', '公斤', 2.80),
-    (3, '水稻', '新鲜水稻价格', '公斤', 3.00);
+VALUES (1, '小麦', '新鲜小麦价格', '公斤', 2.50),
+       (2, '玉米', '新鲜玉米价格', '公斤', 2.80),
+       (3, '水稻', '新鲜水稻价格', '公斤', 3.00);
 
 
 -- 农产品销售表
@@ -176,11 +175,11 @@ CREATE TABLE agricultural_product_sales
     customer_feedback TEXT                                              -- 客户反馈
 )engine=innodb default charset=utf8mb4;
 
-INSERT INTO agricultural_product_sales (product_id, sale_date, quantity, unit_price, total_price, customer_name, customer_contact, payment_method, delivery_address, customer_feedback)
-VALUES
-    (1, '2024-06-10', 200.00, 2.50, 500.00, '张三', '13812345678', '现金', '北京市朝阳区', '产品质量很好，谢谢！'),
-    (2, '2024-07-20', 300.00, 2.80, 840.00, '李四', '13998765432', '支付宝', '上海市浦东新区', '配送及时，服务态度好'),
-    (3, '2024-08-05', 400.00, 3.00, 1200.00, '王五', '13611112222', '微信', '广州市番禺区', '价格实惠，下次还会购买');
+INSERT INTO agricultural_product_sales (product_id, sale_date, quantity, unit_price, total_price, customer_name,
+                                        customer_contact, payment_method, delivery_address, customer_feedback)
+VALUES (1, '2024-06-10', 200.00, 2.50, 500.00, '张三', '13812345678', '现金', '北京市朝阳区', '产品质量很好，谢谢！'),
+       (2, '2024-07-20', 300.00, 2.80, 840.00, '李四', '13998765432', '支付宝', '上海市浦东新区', '配送及时，服务态度好'),
+       (3, '2024-08-05', 400.00, 3.00, 1200.00, '王五', '13611112222', '微信', '广州市番禺区', '价格实惠，下次还会购买');
 
 
 
