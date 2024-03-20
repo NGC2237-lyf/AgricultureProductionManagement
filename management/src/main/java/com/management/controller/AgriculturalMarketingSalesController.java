@@ -1,6 +1,7 @@
 package com.management.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageInfo;
 import com.management.entity.AgriculturalProduct;
 import com.management.entity.AgriculturalProductPrice;
 import com.management.entity.AgriculturalProductSales;
@@ -64,12 +65,13 @@ public class AgriculturalMarketingSalesController {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProduct> agriculturalProducts = agriculturalProductService.getBaseMapper().selectList(null);
         PageUtils.clearPage();
+        PageInfo<AgriculturalProduct> pageInfo = new PageInfo<>(agriculturalProducts);
         if (!ObjectUtils.isEmpty(agriculturalProducts)) {
-            agriculturalProducts.forEach(agriculturalProduct -> {
+            pageInfo.getList().forEach(agriculturalProduct -> {
                 agriculturalProduct.setExpirationDate(DateUtils.toFormatDate(agriculturalProduct.getExpirationDate()));
                 agriculturalProduct.setHarvestDate(DateUtils.toFormatDate(agriculturalProduct.getHarvestDate()));
             });
-            return AjaxResult.success("查询成功", agriculturalProducts);
+            return AjaxResult.success("查询成功", pageInfo);
         }
         return AjaxResult.error("查询失败");
     }
@@ -96,7 +98,8 @@ public class AgriculturalMarketingSalesController {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProductPrice> agriculturalProductPrices = agriculturalProductPriceService.getBaseMapper().selectList(null);
         PageUtils.clearPage();
-        return !ObjectUtils.isEmpty(agriculturalProductPrices) ? AjaxResult.success("查询成功", agriculturalProductPrices) : AjaxResult.error("查询失败");
+        PageInfo<AgriculturalProductPrice> pageInfo = new PageInfo<>(agriculturalProductPrices);
+        return !ObjectUtils.isEmpty(agriculturalProductPrices) ? AjaxResult.success("查询成功", pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/products/price/{id}")
@@ -120,11 +123,12 @@ public class AgriculturalMarketingSalesController {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProductSalesVo> agriculturalProductSales = agriculturalProductSalesService.getAll();
         PageUtils.clearPage();
+        PageInfo<AgriculturalProductSalesVo> pageInfo = new PageInfo<>(agriculturalProductSales);
         if (!ObjectUtils.isEmpty(agriculturalProductSales)) {
-            agriculturalProductSales.forEach(agriculturalProductSale -> {
+            pageInfo.getList().forEach(agriculturalProductSale -> {
                 agriculturalProductSale.setSaleDate(DateUtils.toFormatDate(agriculturalProductSale.getSaleDate()));
             });
-            return AjaxResult.success("查询成功", agriculturalProductSales);
+            return AjaxResult.success("查询成功", pageInfo);
         }
         return AjaxResult.error("查询失败");
     }
@@ -134,11 +138,12 @@ public class AgriculturalMarketingSalesController {
         PageUtils.startPage(pageNum, pageSize);
         List<AgriculturalProductSalesVo> agriculturalProductSales = agriculturalProductSalesService.getAgriculturalProductSales(productId);
         PageUtils.clearPage();
+        PageInfo<AgriculturalProductSalesVo> pageInfo = new PageInfo<>(agriculturalProductSales);
         if (!ObjectUtils.isEmpty(agriculturalProductSales)) {
-            agriculturalProductSales.forEach(agriculturalProductSale -> {
+            pageInfo.getList().forEach(agriculturalProductSale -> {
                 agriculturalProductSale.setSaleDate(DateUtils.toFormatDate(agriculturalProductSale.getSaleDate()));
             });
-            return AjaxResult.success("查询成功", agriculturalProductSales);
+            return AjaxResult.success("查询成功", pageInfo);
         }
         return AjaxResult.error("查询失败");
     }

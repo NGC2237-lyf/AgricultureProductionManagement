@@ -13,7 +13,7 @@ import java.util.List;
 */
 public interface CropPlantingPlanService extends IService<CropPlantingPlan> {
 
-    CropPlantingPlanVo getByFarmId(Integer farmId);
+    List<CropPlantingPlanVo> getByFarmId(Integer farmId);
 
     List<CropPlantingPlanVo> getAll();
 

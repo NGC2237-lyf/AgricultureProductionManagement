@@ -2,13 +2,18 @@ package com.management.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
  * @TableName land
  */
 @Data
+@TableName("land")
 public class Land implements Serializable {
+    @TableId
     private Integer landId;
 
     private String location;

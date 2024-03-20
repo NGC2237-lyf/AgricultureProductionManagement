@@ -1,6 +1,7 @@
 package com.management.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageInfo;
 import com.management.entity.CropGrowthTracking;
 import com.management.entity.SoilTestData;
 import com.management.entity.vo.CropGrowthTrackingVo;
@@ -52,11 +53,12 @@ public class AgriculturalProductionController {
         PageUtils.startPage(pageNum, pageSize);
         List<SoilTestData> soilTestDatas = soilTestDataService.getBaseMapper().selectList(queryWrapper);
         PageUtils.clearPage();
+        PageInfo<SoilTestData> pageInfo = new PageInfo<>(soilTestDatas);
         if (!ObjectUtils.isEmpty(soilTestDatas)) {
-            soilTestDatas.forEach(soilTestData -> {
+            pageInfo.getList().forEach(soilTestData -> {
                 soilTestData.setTestDate(DateUtils.toFormatDate(soilTestData.getTestDate()));
             });
-            return AjaxResult.success("查询成功", soilTestDatas);
+            return AjaxResult.success("查询成功", pageInfo);
         }
         return AjaxResult.error("查询失败");
     }
@@ -66,11 +68,12 @@ public class AgriculturalProductionController {
         PageUtils.startPage(pageNum, pageSize);
         List<SoilTestData> soilTestDatas = soilTestDataService.getBaseMapper().selectList(null);
         PageUtils.clearPage();
+        PageInfo<SoilTestData> pageInfo = new PageInfo<>(soilTestDatas);
         if (!ObjectUtils.isEmpty(soilTestDatas)) {
-            soilTestDatas.forEach(soilTestData -> {
+            pageInfo.getList().forEach(soilTestData -> {
                 soilTestData.setTestDate(DateUtils.toFormatDate(soilTestData.getTestDate()));
             });
-            return AjaxResult.success("查询成功", soilTestDatas);
+            return AjaxResult.success("查询成功", pageInfo);
         }
         return AjaxResult.error("查询失败");
     }
@@ -112,7 +115,8 @@ public class AgriculturalProductionController {
         PageUtils.startPage(pageNum, pageSize);
         List<CropGrowthTrackingVo> cropGrowthTrackingVos = cropGrowthTrackingService.getCropGrowthTracking(farmId);
         PageUtils.clearPage();
-        return!ObjectUtils.isEmpty(cropGrowthTrackingVos) ? AjaxResult.success("查询成功", cropGrowthTrackingVos) : AjaxResult.error("查询失败");
+        PageInfo<CropGrowthTrackingVo> pageInfo = new PageInfo<>(cropGrowthTrackingVos);
+        return!ObjectUtils.isEmpty(cropGrowthTrackingVos) ? AjaxResult.success("查询成功", pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/crop/{pageNum}/{pageSize}")
@@ -120,7 +124,8 @@ public class AgriculturalProductionController {
         PageUtils.startPage(pageNum, pageSize);
         List<CropGrowthTrackingVo> cropGrowthTrackingVos = cropGrowthTrackingService.getAllCropGrowthTracking();
         PageUtils.clearPage();
-        return !ObjectUtils.isEmpty(cropGrowthTrackingVos)? AjaxResult.success("查询成功", cropGrowthTrackingVos) : AjaxResult.error("查询失败");
+        PageInfo<CropGrowthTrackingVo> pageInfo = new PageInfo<>(cropGrowthTrackingVos);
+        return !ObjectUtils.isEmpty(cropGrowthTrackingVos)? AjaxResult.success("查询成功", pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/question")

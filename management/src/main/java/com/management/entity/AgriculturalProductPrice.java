@@ -1,5 +1,7 @@
 package com.management.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @ToString
+@TableName("agricultural_product_price")
 public class AgriculturalProductPrice {
     private Integer productId;
     private String productName;

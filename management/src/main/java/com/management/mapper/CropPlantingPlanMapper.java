@@ -16,7 +16,7 @@ import java.util.List;
 */
 @Mapper
 public interface CropPlantingPlanMapper extends BaseMapper<CropPlantingPlan> {
-    CropPlantingPlanVo getByFarmId(@Param("farmId") Integer farmId);
+    List<CropPlantingPlanVo> getByFarmId(@Param("farmId") Integer farmId);
 
     List<CropPlantingPlanVo> getAll();
 }

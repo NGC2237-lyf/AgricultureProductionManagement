@@ -74,9 +74,10 @@ public class FarmPlaningController {
     @GetMapping("/cropPlanting/{id}/{pageNum}/{pageSize}")
     public AjaxResult getCropPlanting(@PathVariable("id") Integer farmId , @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum,pageSize);
-        CropPlantingPlanVo cropPlantingPlanVo = cropPlantingPlanService.getByFarmId(farmId);
+        List<CropPlantingPlanVo> cropPlantingPlanVos = cropPlantingPlanService.getByFarmId(farmId);
         PageUtils.clearPage();
-        return Objects.nonNull(cropPlantingPlanVo) ? AjaxResult.success("查询成功",cropPlantingPlanVo) : AjaxResult.error("查询失败");
+        PageInfo<CropPlantingPlanVo> pageInfo = new PageInfo<>(cropPlantingPlanVos);
+        return !ObjectUtils.isEmpty(cropPlantingPlanVos) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/cropPlanting/{pageNum}/{pageSize}")
@@ -84,7 +85,8 @@ public class FarmPlaningController {
         PageUtils.startPage(pageNum,pageSize);
         List<CropPlantingPlanVo> cropPlantingPlanVos = cropPlantingPlanService.getAll();
         PageUtils.clearPage();
-        return !ObjectUtils.isEmpty(cropPlantingPlanVos) ? AjaxResult.success("查询成功",cropPlantingPlanVos) : AjaxResult.error("查询失败");
+        PageInfo<CropPlantingPlanVo> pageInfo = new PageInfo<>(cropPlantingPlanVos);
+        return !ObjectUtils.isEmpty(cropPlantingPlanVos) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @PostMapping("/cropPlanting/update")
@@ -108,7 +110,7 @@ public class FarmPlaningController {
         List<IrrigationRecordVo> irrigationRecordVos = irrigationRecordService.getByFarmId(farmId);
         PageUtils.clearPage();
         PageInfo<IrrigationRecordVo> pageInfo = new PageInfo<>(irrigationRecordVos);
-        return Objects.nonNull(pageInfo) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
+        return !ObjectUtils.isEmpty(irrigationRecordVos) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @GetMapping("/irrigationRecord/{pageNum}/{pageSize}")
@@ -116,7 +118,8 @@ public class FarmPlaningController {
         PageUtils.startPage(pageNum,pageSize);
         List<IrrigationRecordVo> irrigationRecordVos = irrigationRecordService.getAll();
         PageUtils.clearPage();
-        return !ObjectUtils.isEmpty(irrigationRecordVos) ? AjaxResult.success("查询成功",irrigationRecordVos) : AjaxResult.error("查询失败");
+        PageInfo<IrrigationRecordVo> pageInfo = new PageInfo<>(irrigationRecordVos);
+        return !ObjectUtils.isEmpty(irrigationRecordVos) ? AjaxResult.success("查询成功",pageInfo) : AjaxResult.error("查询失败");
     }
 
     @PostMapping("/irrigationRecord/update")

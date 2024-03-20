@@ -3,13 +3,18 @@ package com.management.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
  * @TableName agricultural_product
  */
 @Data
+@TableName("agricultural_product")
 public class AgriculturalProduct implements Serializable {
+    @TableId
     private Integer productId;
 
     private String productName;

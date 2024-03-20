@@ -1,6 +1,5 @@
 package com.management.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.management.entity.CropPlantingPlan;
 import com.management.entity.vo.CropPlantingPlanVo;
@@ -10,8 +9,6 @@ import com.management.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,13 +25,15 @@ public class CropPlantingPlanServiceImpl extends ServiceImpl<CropPlantingPlanMap
     private CropPlantingPlanMapper cropPlantingPlanMapper;
 
     @Override
-    public CropPlantingPlanVo getByFarmId(Integer farmId) {
-        CropPlantingPlanVo cropPlantingPlanVo = cropPlantingPlanMapper.getByFarmId(farmId);
-        if (Objects.nonNull(cropPlantingPlanVo)) {
-            cropPlantingPlanVo.setPlantingDate(DateUtils.toFormatDate(cropPlantingPlanVo.getPlantingDate()));
-            cropPlantingPlanVo.setHarvestDate(DateUtils.toFormatDate(cropPlantingPlanVo.getHarvestDate()));
+    public List<CropPlantingPlanVo> getByFarmId(Integer farmId) {
+        List<CropPlantingPlanVo> cropPlantingPlanVos = cropPlantingPlanMapper.getByFarmId(farmId);
+        if (Objects.nonNull(cropPlantingPlanVos)) {
+            cropPlantingPlanVos.forEach(cropPlantingPlanVo -> {
+                cropPlantingPlanVo.setPlantingDate(DateUtils.toFormatDate(cropPlantingPlanVo.getPlantingDate()));
+                cropPlantingPlanVo.setHarvestDate(DateUtils.toFormatDate(cropPlantingPlanVo.getHarvestDate()));
+            });
         }
-        return cropPlantingPlanVo;
+        return cropPlantingPlanVos;
     }
 
     @Override
