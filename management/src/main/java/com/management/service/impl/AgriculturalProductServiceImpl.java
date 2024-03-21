@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.management.entity.AgriculturalProduct;
 import com.management.entity.AgriculturalProductPrice;
 import com.management.entity.AgriculturalProductSales;
+import com.management.entity.thread.WebThread;
 import com.management.mapper.AgriculturalProductPriceMapper;
 import com.management.service.AgriculturalProductService;
 import com.management.mapper.AgriculturalProductMapper;
@@ -21,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* @author lenovo
-* @description 针对表【agricultural_product】的数据库操作Service实现
-* @createDate 2024-03-07 21:03:05
-*/
+ * @author lenovo
+ * @description 针对表【agricultural_product】的数据库操作Service实现
+ * @createDate 2024-03-07 21:03:05
+ */
 @Service
 public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProductMapper, AgriculturalProduct>
-    implements AgriculturalProductService{
+        implements AgriculturalProductService {
 
     @Autowired
     private AgriculturalProductMapper agriculturalProductMapper;
@@ -36,48 +37,59 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
     private AgriculturalProductPriceMapper agriculturalProductPriceMapper;
 
     @Override
-    public boolean insertProduct(List<AgriculturalProduct> products) {
-        boolean result = saveBatch(products);
+    public boolean insertProduct(AgriculturalProduct product) {
+        boolean result = save(product);
         new Thread(() -> {
-            findData(products);
+            findData(product);
         });
         return result;
     }
 
-    public void findData(List<AgriculturalProduct> products) {
-        products.forEach(product -> {
-            String pinYin = PinYinUtils.toChinesePinYin(product.getProductName());
-            Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
-            Elements boxes = document.getElementsByClass("show-ctn");
-            if (!boxes.isEmpty()) {
-                for (int i = 0; i < boxes.size(); i++) {
-                    if (!boxes.get(i).getElementsByTag("h2").html().contains(product.getProductName())) {
-                        boxes.remove(i);
-                    }
+    public void findData(AgriculturalProduct product) {
+        String pinYin = PinYinUtils.toChinesePinYin(product.getProductName());
+        Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
+        Elements boxes = document.getElementsByClass("show-ctn");
+        if (!boxes.isEmpty()) {
+            for (int i = 0; i < boxes.size(); i++) {
+                if (!boxes.get(i).getElementsByTag("h2").html().contains(product.getProductName())) {
+                    boxes.remove(i);
                 }
             }
-            if (!boxes.isEmpty()) {
-                for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
-                    BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
-                    String unit = boxes.get(i).getElementsByClass("shops-price").text();
-                    String description = boxes.get(i).getElementsByTag("h2").text();
-                    AgriculturalProductPrice agriculturalProductPrice = new AgriculturalProductPrice();
-                    agriculturalProductPrice.setProductId(product.getProductId());
-                    agriculturalProductPrice.setProductName(product.getProductName());
-                    agriculturalProductPrice.setPrice(price);
-                    agriculturalProductPrice.setUnit(unit);
-                    agriculturalProductPrice.setDescription(description);
-                    agriculturalProductPriceMapper.insert(agriculturalProductPrice);
-                }
+        }
+        if (!boxes.isEmpty()) {
+            for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
+                BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
+                String unit = boxes.get(i).getElementsByClass("shops-price").text();
+                String description = boxes.get(i).getElementsByTag("h2").text();
+                AgriculturalProductPrice agriculturalProductPrice = new AgriculturalProductPrice();
+                agriculturalProductPrice.setProductId(product.getProductId());
+                agriculturalProductPrice.setProductName(product.getProductName());
+                agriculturalProductPrice.setPrice(price);
+                agriculturalProductPrice.setUnit(unit);
+                agriculturalProductPrice.setDescription(description);
+                agriculturalProductPriceMapper.insert(agriculturalProductPrice);
             }
-        });
+        }
     }
 
     public List<AgriculturalProductPrice> findData(String word) {
         String pinYin = PinYinUtils.toChinesePinYin(word);
+        char[] chars = word.toCharArray();
+        String pinYinM = "";
+        for (int i = 0; i < chars.length; i++) {
+            pinYinM += PinYinUtils.toChinesePinYin(String.valueOf(chars[i])).substring(0, 1);
+        }
         List<AgriculturalProductPrice> agriculturalProductPrices = new ArrayList<>();
-        Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
-        Elements boxes = document.getElementsByClass("show-ctn");
+        WebThread webThread1 = new WebThread("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
+        WebThread webThread2 = new WebThread("https://www.cnhnb.com/p/" + pinYinM + "-0-84-0-0-1/");
+        WebThread webThread3 = new WebThread("https://www.cnhnb.com/supply/search/" + "?k=" + word);
+        Elements boxes = null;
+        webThread1.start();
+        webThread2.start();
+        webThread3.start();
+        while (webThread1.isAlive() || webThread2.isAlive() || webThread3.isAlive()) {
+            boxes = WebThread.boxes;
+        }
         if (!boxes.isEmpty()) {
             for (int i = 0; i < boxes.size(); i++) {
                 if (!boxes.get(i).getElementsByTag("h2").html().contains(word)) {
@@ -101,7 +113,7 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
         return agriculturalProductPrices;
     }
 
-    public void updateData(Integer productId ,String word) {
+    public void updateData(Integer productId, String word) {
         String pinYin = PinYinUtils.toChinesePinYin(word);
         List<AgriculturalProductPrice> agriculturalProductPrices = new ArrayList<>();
         Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
@@ -124,7 +136,7 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
                 agriculturalProductPrice.setUnit(unit);
                 agriculturalProductPrice.setDescription(description);
                 agriculturalProductPrices.add(agriculturalProductPrice);
-                agriculturalProductPriceMapper.update(agriculturalProductPrice ,new QueryWrapper<AgriculturalProductPrice>().eq("product_id",productId));
+                agriculturalProductPriceMapper.update(agriculturalProductPrice, new QueryWrapper<AgriculturalProductPrice>().eq("product_id", productId));
             }
         }
     }

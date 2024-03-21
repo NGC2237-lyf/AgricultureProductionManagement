@@ -12,5 +12,5 @@ import java.util.List;
 */
 public interface AgriculturalProductService extends IService<AgriculturalProduct> {
 
-    boolean insertProduct(List<AgriculturalProduct> products);
+    boolean insertProduct(AgriculturalProduct product);
 }

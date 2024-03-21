@@ -8,6 +8,7 @@ import com.management.entity.SoilTestData;
 import com.management.mapper.CropPlantingPlanMapper;
 import com.management.service.CropGrowthTrackingService;
 import com.management.service.IrrigationRecordService;
+import com.management.service.impl.AgriculturalProductServiceImpl;
 import com.management.service.impl.SoilTestDataServiceImpl;
 import com.management.utils.ChatGgtUtils;
 import com.management.utils.CrawlerUtils;
@@ -35,6 +36,9 @@ public class SpringTest {
 
     @Autowired
     private CropGrowthTrackingService cropGrowthTrackingService;
+
+    @Autowired
+    private AgriculturalProductServiceImpl agriculturalProductService;
     @Test
     void testAPI() {
         String question = "请帮我根据以下数据分析施肥、灌溉、病虫防害的建议。";
@@ -60,8 +64,7 @@ public class SpringTest {
 
     @Test
     void testFetch() {
-        Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/zhurou-0-84-0-0-1/");
-        System.out.println(document.getElementsByClass("show-ctn").get(1).getElementsByClass("sp1").html());
+        System.out.println(agriculturalProductService.findData("青菜"));
     }
 
     @Test

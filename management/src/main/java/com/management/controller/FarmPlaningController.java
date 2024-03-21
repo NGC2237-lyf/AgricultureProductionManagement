@@ -98,8 +98,8 @@ public class FarmPlaningController {
         return cropPlantingPlanService.removeByIds(cropPlantingPlanIds)?AjaxResult.success("删除成功"):AjaxResult.error("删除失败");
     }
     @PostMapping("/cropPlanting/insert")
-    public AjaxResult insertCropPlanting(@RequestBody List<CropPlantingPlan> cropPlantingPlans) {
-        return cropPlantingPlanService.saveBatch(cropPlantingPlans)?AjaxResult.success("插入成功"):AjaxResult.error("插入失败");
+    public AjaxResult insertCropPlanting(@RequestBody CropPlantingPlan cropPlantingPlan) {
+        return cropPlantingPlanService.save(cropPlantingPlan)?AjaxResult.success("插入成功"):AjaxResult.error("插入失败");
     }
 
     /*灌溉记录*/
@@ -133,8 +133,8 @@ public class FarmPlaningController {
     }
 
     @PostMapping("/irrigationRecord/insert")
-    public AjaxResult insertIrrigationRecord(@RequestBody List<IrrigationRecord> irrigationRecords) {
-        return irrigationRecordService.saveBatch(irrigationRecords)?AjaxResult.success("插入成功"):AjaxResult.error("插入失败");
+    public AjaxResult insertIrrigationRecord(@RequestBody IrrigationRecord irrigationRecord) {
+        return irrigationRecordService.save(irrigationRecord)?AjaxResult.success("插入成功"):AjaxResult.error("插入失败");
     }
 
 }

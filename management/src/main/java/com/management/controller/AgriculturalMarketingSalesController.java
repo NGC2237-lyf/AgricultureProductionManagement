@@ -77,8 +77,8 @@ public class AgriculturalMarketingSalesController {
     }
 
     @PostMapping("/products/insert")
-    public AjaxResult insertProducts(@RequestBody List<AgriculturalProduct> agriculturalProducts) {
-        return agriculturalProductService.insertProduct(agriculturalProducts) ? AjaxResult.success("插入成功") : AjaxResult.error("插入失败");
+    public AjaxResult insertProducts(@RequestBody AgriculturalProduct agriculturalProduct) {
+        return agriculturalProductService.insertProduct(agriculturalProduct) ? AjaxResult.success("插入成功") : AjaxResult.error("插入失败");
     }
 
     @PostMapping("/products/update")
@@ -166,8 +166,8 @@ public class AgriculturalMarketingSalesController {
 
 
     @PostMapping("/products/sales/insert")
-    public AjaxResult insertProductSales(@RequestBody List<AgriculturalProductSales> agriculturalProductSales) {
-        return agriculturalProductSalesService.saveBatch(agriculturalProductSales) ? AjaxResult.success("插入成功") : AjaxResult.error("插入失败");
+    public AjaxResult insertProductSales(@RequestBody AgriculturalProductSales agriculturalProductSale) {
+        return agriculturalProductSalesService.save(agriculturalProductSale) ? AjaxResult.success("插入成功") : AjaxResult.error("插入失败");
     }
 
     @PostMapping("/products/sales/update")
