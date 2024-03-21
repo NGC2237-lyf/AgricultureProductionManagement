@@ -79,7 +79,7 @@ public class AgriculturalProductionController {
     }
 
     @PostMapping("/soil/insert")
-    public AjaxResult insertSoilTestData(SoilTestData soilTestData) {
+    public AjaxResult insertSoilTestData(@RequestBody SoilTestData soilTestData) {
         return soilTestDataService.save(soilTestData) ? AjaxResult.success("添加成功") : AjaxResult.error("添加失败");
     }
 
