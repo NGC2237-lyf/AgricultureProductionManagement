@@ -112,8 +112,13 @@ public class AgriculturalMarketingSalesController {
 
     @PostMapping("/products/price")
     public AjaxResult getProductPrice(@RequestParam("w") String word) {
-        List<AgriculturalProductPrice> productPrices = agriculturalProductService.findData(word);
-        return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.error("查询失败");
+        QueryWrapper<AgriculturalProductPrice> queryWrapper = new QueryWrapper<AgriculturalProductPrice>().like("product_name", word);
+        List<AgriculturalProductPrice> list = agriculturalProductPriceService.getBaseMapper().selectList(queryWrapper);
+        if (list.isEmpty()) {
+            List<AgriculturalProductPrice> productPrices = agriculturalProductService.findData(word);
+            return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.error("查询失败");
+        }
+        return !ObjectUtils.isEmpty(list) ? AjaxResult.success("查询成功", list) : AjaxResult.error("查询失败");
     }
 
     /*农产品销售*/
