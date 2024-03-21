@@ -94,8 +94,19 @@ public class AgriculturalMarketingSalesController {
     /*农产品推荐*/
 
     @GetMapping("/products/price/{pageNum}/{pageSize}")
-    public AjaxResult getAllProductPrice(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+    public AjaxResult getAllProductPrice(@RequestParam("w") String word,@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
+        if (!StringUtils.isEmpty(word)) {
+            QueryWrapper<AgriculturalProductPrice> queryWrapper = new QueryWrapper<AgriculturalProductPrice>().like("product_name", word);
+            List<AgriculturalProductPrice> list = agriculturalProductPriceService.getBaseMapper().selectList(queryWrapper);
+            PageUtils.clearPage();
+            if (list.isEmpty()) {
+                List<AgriculturalProductPrice> productPrices = agriculturalProductService.findData(word);
+                return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.error("查询失败");
+            }
+            PageInfo<AgriculturalProductPrice> pageInfo = new PageInfo<>(list);
+            return !ObjectUtils.isEmpty(pageInfo.getList()) ? AjaxResult.success("查询成功", pageInfo) : AjaxResult.error("查询失败");
+        }
         List<AgriculturalProductPrice> agriculturalProductPrices = agriculturalProductPriceService.getBaseMapper().selectList(null);
         PageUtils.clearPage();
         PageInfo<AgriculturalProductPrice> pageInfo = new PageInfo<>(agriculturalProductPrices);
@@ -110,8 +121,8 @@ public class AgriculturalMarketingSalesController {
         return !Objects.isNull(agriculturalProductPrices) ? AjaxResult.success("查询成功", agriculturalProductPrices) : AjaxResult.error("查询失败");
     }
 
-    @PostMapping("/products/price")
-    public AjaxResult getProductPrice(@RequestParam("w") String word) {
+/*    @PostMapping("/products/price")
+    public AjaxResult getProductPrice() {
         QueryWrapper<AgriculturalProductPrice> queryWrapper = new QueryWrapper<AgriculturalProductPrice>().like("product_name", word);
         List<AgriculturalProductPrice> list = agriculturalProductPriceService.getBaseMapper().selectList(queryWrapper);
         if (list.isEmpty()) {
@@ -119,7 +130,7 @@ public class AgriculturalMarketingSalesController {
             return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.error("查询失败");
         }
         return !ObjectUtils.isEmpty(list) ? AjaxResult.success("查询成功", list) : AjaxResult.error("查询失败");
-    }
+    }*/
 
     /*农产品销售*/
 
