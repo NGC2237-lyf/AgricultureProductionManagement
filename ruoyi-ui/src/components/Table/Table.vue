@@ -1,12 +1,21 @@
 <template>
   <div class="background">
+    <div v-if="this.showSearch" class="search">
+      <el-input  style="width: 400px"  v-model="searchData" ></el-input>
+      <el-button style="margin-left: 20px" type="primary" icon="el-icon-search"  @click="search"> 搜素</el-button>
+      <el-button @click="reset" icon="el-icon-refresh-left">重置</el-button>
+    </div>
+
     <!-- 添加按钮 -->
-    <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit">{{'添加'+this.title}}</el-button>
+    <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit">{{ '添加' + this.title }}
+    </el-button>
     <!-- 表格 -->
-    <el-table :data="currentPageData" class="table">
-      <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.prop" :label="column.label"></el-table-column>
+    <el-empty v-if="currentPageData.length ===0 "></el-empty>
+    <el-table v-if="currentPageData.length !==0 " :data="currentPageData" class="table">
+      <el-table-column v-for="(column, index) in columns" :key="index"  :prop="column.prop" :label="column.label"
+      ></el-table-column>
       <el-table-column label="操作" v-if="showEdit">
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
           <el-button @click="confirmDelete(scope.$index)" style="color: red" type="text" size="small">删除</el-button>
         </template>
@@ -22,17 +31,23 @@
       :total="total"
     ></el-pagination>
     <!-- 编辑/添加对话框 -->
-    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="50%" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="50%" :close-on-press-escape="false"
+               :close-on-click-modal="false"
+    >
       <el-form :model="formData" :rules="formRules" ref="formData" label-width="200px">
-        <el-form-item v-for="(column, index) in formColumns" :key="index" :label="column.label" :prop="column.prop" v-if="!column.show"
-                      :rules="[{ required: true, message: '请输入' + column.label, trigger: 'blur' }]">
+        <el-form-item v-for="(column, index) in formColumns" :key="index" :label="column.label" :prop="column.prop"
+                      v-if="!column.close"
+                      :rules="[{ required: true, message: '请输入' + column.label, trigger: 'blur' }]"
+        >
           <!-- 根据输入框类型判断使用哪种组件 -->
           <template v-if="column.type === 'input'">
             <el-input v-model="formData[column.prop]" :type="column.inputType"></el-input>
           </template>
           <template v-else-if="column.type === 'select'">
             <el-select v-model="formData[column.prop]" placeholder="请选择">
-              <el-option v-for="option in column.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+              <el-option v-for="option in column.options" :key="option.value" :label="option.label"
+                         :value="option.value"
+              ></el-option>
             </el-select>
           </template>
           <template v-else-if="column.type === 'date'">
@@ -55,9 +70,13 @@
 <script>
 export default {
   props: {
-    showEdit:{
-      type:Boolean,
-      default:true
+    showEdit: {
+      type: Boolean,
+      default: true
+    },
+    showSearch:{
+      type: Boolean,
+      default: false
     },
     columns: {
       type: Array,
@@ -86,7 +105,8 @@ export default {
       currentPage: 1,
       pageSize: 10,
       isEditMode: false, // 编辑模式标志
-      deleteIndex: null // 要删除的数据的索引
+      deleteIndex: null, // 要删除的数据的索引
+      searchData:" "
     }
   },
   computed: {
@@ -104,6 +124,14 @@ export default {
       this.formData = {} // 清空表单数据
       this.dialogVisible = true // 显示对话框
       this.isEditMode = false // 进入添加模式
+    },
+    search(){
+      this.$emit('search',this.searchData)
+      // 处理搜索逻辑
+    } ,
+    reset(){
+      this.searchData = " "
+      this.$emit('search',this.searchData)
     },
     // 保存表单数据
     saveForm() {
@@ -168,7 +196,10 @@ export default {
 .background {
   padding: 20px
 }
-
+.search{
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
 .button {
   float: right
 }

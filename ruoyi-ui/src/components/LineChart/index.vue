@@ -120,20 +120,20 @@ export default {
         },
         // 系列数据配置
         series: [
-          {
-            name: '折线图',
-            type: 'line',
-            smooth: true,
-            symbol: 'circle',
-            symbolSize: 10,
-            itemStyle: {
-              color: '#ff6347'
-            },
-            areaStyle: {
-              color: 'rgba(255, 99, 71, 0.2)'
-            },
-            data: this.chartData.map(item => item.value)
-          },
+          // {
+          //   name: '折线图',
+          //   type: 'line',
+          //   smooth: true,
+          //   symbol: 'circle',
+          //   symbolSize: 10,
+          //   itemStyle: {
+          //     color: '#ff6347'
+          //   },
+          //   areaStyle: {
+          //     color: 'rgba(255, 99, 71, 0.2)'
+          //   },
+          //   data: this.chartData.map(item => item.value)
+          // },
           {
             name: '柱状图',
             type: 'bar',
