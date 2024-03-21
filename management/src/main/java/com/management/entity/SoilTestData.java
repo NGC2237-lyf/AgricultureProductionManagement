@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.Data;
 @Data
 @TableName("soil_test_data")
 public class SoilTestData implements Serializable {
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer testId;
 
     private Integer location;

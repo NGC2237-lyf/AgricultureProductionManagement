@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.Data;
 @Data
 @TableName("crop_planting_plan")
 public class CropPlantingPlan implements Serializable {
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer planId;
 
     private Integer farmId;
