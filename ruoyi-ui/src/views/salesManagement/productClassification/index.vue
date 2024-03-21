@@ -49,7 +49,6 @@ export default {
     }
   },
   async created() {
-    // await this.getPlanInfo()
     await this.getInfo(" ")
   },
   methods: {
