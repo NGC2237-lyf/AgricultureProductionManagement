@@ -3,10 +3,9 @@
     <!-- 使用作灌溉系统表格组件 -->
     <Table
       title="灌溉系统"
-      :totalNum="totalNum"
+      :totalNum="page.totalNum"
       :columns="tableColumns"
       :data="irrigationSystemData"
-      :options="selectOptions"
       @delete="handleDelete"
       @currentpagechange="handleCurrentPageChange"
       @save="handleSave"
@@ -16,7 +15,9 @@
 </template>
 
 <script>
-import Table from '/src/components/Table/Table.vue';
+import Table from '/src/components/Table/Table.vue'
+import { IrrigationRecord, deletePlan, getPlanList, insertPlan, Land, updatePlan } from '@/api/data/getInfoData'
+import { listUser } from '@/api/system/user'
 
 export default {
   components: {
@@ -24,63 +25,98 @@ export default {
   },
   data() {
     return {
-      irrigationSystemData: [ // 假数据
-        { trackingId: 1, farmId: 101, landId: 201, cropType: 'option1', growthStage: 'Seedling', observationDate: '2024-03-20', height: 20, canopyWidth: 30, leafColor: 'Green', pestPresence: 'None', diseasePresence: 'None', nutrientDeficiency: 'None', notes: 'Some notes' },
-        { trackingId: 2, farmId: 102, landId: 202, cropType: 'option2', growthStage: 'Flowering', observationDate: '2024-03-21', height: 25, canopyWidth: 35, leafColor: 'Yellow', pestPresence: 'Some pests', diseasePresence: 'None', nutrientDeficiency: 'None', notes: 'Some notes' },
-        { trackingId: 3, farmId: 103, landId: 203, cropType: 'option3', growthStage: 'Fruiting', observationDate: '2024-03-22', height: 30, canopyWidth: 40, leafColor: 'Brown', pestPresence: 'None', diseasePresence: 'Some disease', nutrientDeficiency: 'None', notes: 'Some notes' }
-      ],
-      totalNum: 3, // 数据总数
+      irrigationSystemData: [],
+      page: {
+        pageNum: 1,
+        pageSize: 10,
+        totalNum: 0
+      },
       tableColumns: [ // 表格列配置
-        { prop: 'trackingId', label: '跟踪编号',type: "input" },
-        { prop: 'farmId', label: '农场/农户编号' ,type: "input"},
-        { prop: 'landId', label: '地块编号' ,type: "input"},
-        { prop: 'cropType', label: '作物种类', type: 'select', options: this.getSelectOptions() },
-        { prop: 'growthStage', label: '生长阶段' ,type: "input"},
-        { prop: 'observationDate', label: '观测日期',type: "input" },
-        { prop: 'height', label: '高度（厘米）',type: "input" },
-        { prop: 'canopyWidth', label: '冠幅宽度（厘米）',type: "input" },
-        { prop: 'leafColor', label: '叶片颜色',type: "input" },
-        { prop: 'pestPresence', label: '害虫存在情况' ,type: "input"},
-        { prop: 'diseasePresence', label: '病害存在情况' ,type: "input"},
-        { prop: 'nutrientDeficiency', label: '养分缺乏情况',type: "input" },
-        { prop: 'notes', label: '备注' ,type: "input"}
+        { prop: 'irrigationId', label: '跟踪编号', type: 'input', close: true },
+        { prop: 'farmId', label: '农场/农户编号', type: 'select' },
+        { prop: 'landId', label: '地块编号', type: 'select' },
+        { prop: 'farmName', label: '灌溉用户', type: 'input', close: true },
+        { prop: 'irrigationDate', label: '灌溉日期', type: 'date' },
+        { prop: 'irrigationMethod', label: '灌溉方法', type: 'input' },
+        { prop: 'irrigationDuration', label: '灌溉时间(h)', type: 'number' },
+        { prop: 'waterConsumption', label: '灌溉水量(m³)', type: 'number' },
+        { prop: 'notes', label: '备注', type: 'input' }
       ],
-
-    };
-  },
-  computed: {
-    selectOptions() {
-      return [
-        { value: 'option1', label: '选项1' },
-        { value: 'option2', label: '选项2' },
-        { value: 'option3', label: '选项3' }
-      ];
+      user: [],
+      land: []
     }
+  },
+  async created() {
+    await this.getPlanInfo()
+    await this.getInfo()
   },
   methods: {
-    getSelectOptions() {
-      return [
-        { value: 'option1', label: '选项1' },
-        { value: 'option2', label: '选项2' },
-        { value: 'option3', label: '选项3' }
-      ];
+    async getPlanInfo() {
+      const user = await listUser(this.queryParams)
+      this.user = user.rows.map(item => {
+        return { label: item.userName, value: item.userId }
+      })
+      const res = await getPlanList(Land, 1, 999999)
+      this.land = res.data.list.map(item => {
+        return { label: item.landId, value: item.landId }
+      })
+
+      this.updateOptions()
     },
-    // 处理删除事件
-    handleDelete(index) {
-      // 处理删除操作
+    // 更新选项数据
+    updateOptions() {
+      // 在这里更新选项数据
+      this.tableColumns.forEach(column => {
+        if (column.prop === 'landId') {
+          column.options = this.land
+        }
+        if (column.prop === 'farmId') {
+          column.options = this.user
+        }
+      })
     },
-    // 处理保存事件
-    handleSave(data) {
-      // 处理保存操作
+    async getInfo() {
+      const res = await getPlanList(IrrigationRecord, this.page.pageNum, this.page.pageSize)
+      this.irrigationSystemData = res.data.list
+      this.page.totalNum = res.data.total
     },
-    // 处理添加事件
-    handleAdd(data) {
-      // 处理添加操作
+    // 删除土地信息
+    async handleDelete(index) {
+      const res = await deletePlan(IrrigationRecord, [this.irrigationSystemData[index].irrigationId])
+      if (res.code === 200) {
+        this.$message.success('删除成功')
+      } else {
+        this.$message.error('删除失败')
+      }
+      await this.getInfo()
     },
-    // 处理当前页变化事件
+    // 保存土地信息
+    async handleSave(data) {
+      // 根据数据中的信息进行保存操作，这里可以发送请求给后端或者进行其他操作
+      const res = await updatePlan(IrrigationRecord, data)
+      if (res.code === 200) {
+        this.$message.success('更新成功')
+      } else {
+        this.$message.error('更新失败')
+      }
+      await this.getInfo()
+    },
+    // 添加土地信息
+    async handleAdd(data) {
+      // 将新增的土地信息添加到 landData 中
+      console.log(data)
+      const res = await insertPlan(IrrigationRecord, data)
+      if (res.code === 200) {
+        this.$message.success('添加成功')
+      } else {
+        this.$message.error('添加失败')
+      }
+      await this.getInfo()
+    },
     handleCurrentPageChange(currentPage) {
-      // 处理当前页变化操作
+      this.page.pageNum = currentPage
+      this.getInfo()
     }
   }
-};
+}
 </script>

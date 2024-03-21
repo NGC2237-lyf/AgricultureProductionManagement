@@ -1,12 +1,29 @@
 <template>
   <div class="parent-component">
-    <h2>折线图示例</h2>
     <line-chart
       :chart-width="'800px'"
       :chart-height="'500px'"
-      :chart-data="chartData"
-      :chart-title="'销售额趋势图'"
-      :x-axis-name="'月份'"
+      :chart-data="totalPrice"
+      :chart-title="'产品销售总价图'"
+      :x-axis-name="'种类'"
+      :y-axis-name="'销售额'"
+      :animation="true"
+    ></line-chart>
+    <line-chart
+      :chart-width="'800px'"
+      :chart-height="'500px'"
+      :chart-data="quantity"
+      :chart-title="'产品销售数量图'"
+      :x-axis-name="'种类'"
+      :y-axis-name="'销售额'"
+      :animation="true"
+    ></line-chart>
+    <line-chart
+      :chart-width="'800px'"
+      :chart-height="'500px'"
+      :chart-data="unitPrice"
+      :chart-title="'产品销售单价图'"
+      :x-axis-name="'种类'"
       :y-axis-name="'销售额'"
       :animation="true"
     ></line-chart>
@@ -14,23 +31,41 @@
 </template>
 
 <script>
-import LineChart from '@/components/LineChart/index.vue'; // 导入折线图组件
+import LineChart from '@/components/LineChart/index.vue';
+import { getPlanList, MarketSales } from '@/api/data/getInfoData' // 导入折线图组件
 
 export default {
   components: {
     LineChart // 注册折线图组件
   },
+  async created() {
+    // await this.getPlanInfo()
+    await this.getInfo()
+  },
   data() {
     return {
-      chartData: [ // 折线图数据
-        { name: '一月', value: 120 },
-        { name: '二月', value: 200 },
-        { name: '三月', value: 150 },
-        { name: '四月', value: 380 },
-        { name: '五月', value: 250 },
-        { name: '六月', value: 300 }
-      ]
+      totalPrice: [],
+      quantity:[],
+      unitPrice:[],
+      page:{
+        pageNum:1,
+        pageSize:999999,
+      },
     };
+  },
+  methods:{
+    async getInfo() {
+      const res = await getPlanList(MarketSales, this.page.pageNum, this.page.pageSize)
+      this.totalPrice = res.data.list.map(item => {
+        return {name: item.productName, value: item.totalPrice }
+      })
+      this.quantity = res.data.list.map(item => {
+        return {name: item.productName, value: item.quantity }
+      })
+      this.unitPrice = res.data.list.map(item => {
+        return {name: item.productName, value: item.unitPrice }
+      })
+    },
   }
 };
 </script>

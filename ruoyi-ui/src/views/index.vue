@@ -6,7 +6,6 @@
         <h2>热门农产品介绍</h2>
         <div class="product-list">
           <div class="product-item" v-for="product in hotProducts" :key="product.id">
-            <img :src="product.image" :alt="product.name">
             <h3>{{ product.name }}</h3>
             <p>{{ product.description }}</p>
           </div>
@@ -61,6 +60,8 @@
 import WeatherWidget from '@/components/Weather/index.vue'
 import LineChart from '@/components/LineChart/index.vue'
 import { getWeather } from '@/api/data/weather'
+import { listUser } from '@/api/system/user'
+import { getPlanList, MarketSales } from '@/api/data/getInfoData'
 
 export default {
   components: {
@@ -75,17 +76,10 @@ export default {
       widgetHumidityLabel: '湿度',
       widgetWindSpeedLabel: '风速',
       weatherData: {},
-      chartData: [ // 折线图数据
-        { name: '一月', value: 120 },
-        { name: '二月', value: 200 },
-        { name: '三月', value: 150 },
-        { name: '四月', value: 380 },
-        { name: '五月', value: 250 },
-        { name: '六月', value: 300 }
-      ],
+      chartData: [],
       hotProducts: [
-        { id: 1, name: '苹果', image: 'path_to_your_image', description: '新鲜美味的苹果，产自XXX地区。' },
-        { id: 2, name: '橙子', image: 'path_to_your_image', description: '酸甜可口的橙子，适合各种场合食用。' }
+        { id: 1, name: '苹果', description: '新鲜美味的苹果，产自华北平原地区。' },
+        { id: 2, name: '橙子', description: '酸甜可口的橙子，适合各种场合食用。' }
         // 可以继续添加更多热门农产品
       ],
       agriculturalNews: [
@@ -93,12 +87,21 @@ export default {
         { id: 2, title: '农产品市场行情', description: '近期农产品价格波动较大，需要密切关注市场动态。' }
         // 可以继续添加更多农业资讯
       ]
+
     }
   },
   async created() {
     await this.fetchWeatherData()
+    await this.getInfo()
   },
   methods: {
+    async getInfo() {
+      const res = await getPlanList(MarketSales, 1, 9999)
+      this.chartData = res.data.list.map(item => {
+        return { name: item.productName, value: item.totalPrice }
+      })
+
+    },
     async fetchWeatherData() {
       // 模拟天气数据获取
       const res = await getWeather()

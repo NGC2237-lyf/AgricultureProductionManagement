@@ -1,12 +1,14 @@
 <template>
   <div>
     <!-- 使用生长状况跟踪表格组件 -->
-    <Table title="生长状况跟踪" :totalNum="totalNum" :columns="tableColumns" :data="trackingData" @delete="handleDelete" @currentPageChange="handleCurrentPageChange" @save="handleSave" @add="handleAdd" />
+    <Table title="生长状况跟踪" :totalNum="page.totalNum" :columns="tableColumns" :data="trackingData" @delete="handleDelete" @currentPageChange="handleCurrentPageChange" @save="handleSave" @add="handleAdd" />
   </div>
 </template>
 
 <script>
 import Table from '/src/components/Table/Table.vue';
+import { AgricultureCrop, deletePlan, getPlanList, insertPlan, Land, updatePlan } from '@/api/data/getInfoData'
+import { listUser } from '@/api/system/user'
 
 export default {
   components: {
@@ -14,17 +16,17 @@ export default {
   },
   data() {
     return {
-      trackingData: [ // 假数据
-        { trackingId: 1, farmId: 101, landId: 201, cropType: '小麦', growthStage: '发芽期', observationDate: '2024-03-20', height: 10.5, canopyWidth: 30.2, leafColor: 'Green', pestPresence: '无', diseasePresence: '无', nutrientDeficiency: '无', notes: 'Some notes' },
-        { trackingId: 2, farmId: 102, landId: 202, cropType: '玉米', growthStage: '生长期', observationDate: '2024-03-21', height: 20.3, canopyWidth: 40.1, leafColor: 'Green', pestPresence: '少量', diseasePresence: '无', nutrientDeficiency: '缺钾', notes: 'Some notes' },
-        { trackingId: 3, farmId: 103, landId: 203, cropType: '水稻', growthStage: '抽穗期', observationDate: '2024-03-22', height: 30.8, canopyWidth: 50.5, leafColor: 'Green', pestPresence: '中等', diseasePresence: '轻微', nutrientDeficiency: '缺氮', notes: 'Some notes' }
-      ],
-      totalNum: 20, // 总数据条数
+      trackingData: [],
+      page:{
+        pageNum:1,
+        pageSize:10,
+        totalNum:0,
+      },
       tableColumns: [
-        { prop: 'trackingId', label: '跟踪编号', type: 'number' },
-        { prop: 'farmId', label: '农场/农户编号', type: 'number' },
-        { prop: 'landId', label: '地块编号', type: 'number' },
-        { prop: 'cropType', label: '作物种类', type: 'input' },
+        { prop: 'trackingId', label: '跟踪编号', type: 'number',close:true },
+        { prop: 'farmId', label: '农场/农户编号', type: 'select' },
+        { prop: 'landId', label: '地块编号', type: 'select' },
+        { prop: 'cropType', label: '作物种类', type: 'select' },
         { prop: 'growthStage', label: '生长阶段', type: 'select', options: this.getGrowthStageOptions() },
         { prop: 'observationDate', label: '观测日期', type: 'date' },
         { prop: 'height', label: '高度（厘米）', type: 'number' },
@@ -34,27 +36,96 @@ export default {
         { prop: 'diseasePresence', label: '病害存在情况', type: 'input' },
         { prop: 'nutrientDeficiency', label: '养分缺乏情况', type: 'input' },
         { prop: 'notes', label: '备注', type: 'input' }
+      ],
+      land:[],
+      user:[],
+      cropType:[
+        { label: '小麦', value: '小麦' },
+        { label: '水稻', value: '水稻' },
+        { label: '玉米', value: '玉米' },
+        { label: '大豆', value: '大豆' },
+        { label: '油菜', value: '油菜' },
+        { label: '马铃薯', value: '马铃薯' },
+        { label: '黄瓜', value: '黄瓜' },
+        { label: '番茄', value: '番茄' },
+        { label: '西兰花', value: '西兰花' },
+        { label: '胡萝卜', value: '胡萝卜' },
+        { label: '其他', value: '其他' },
       ]
     };
   },
+  async created() {
+    await this.getPlanInfo()
+    await this.getInfo()
+  },
   methods: {
-    // 删除生长状况跟踪记录
-    handleDelete(index) {
-      this.trackingData.splice(index, 1); // 从 trackingData 中删除指定索引的生长状况跟踪记录
+    async getPlanInfo() {
+      const res = await getPlanList(Land, 1, 999999)
+      this.land = res.data.list.map(item => {
+        return { label: item.landId, value: item.landId }
+      })
+      const user = await listUser(this.queryParams)
+      this.user = user.rows.map(item => {
+        return { label: item.userName, value: item.userId }
+      })
+      this.updateOptions()
     },
-    // 保存生长状况跟踪记录
-    handleSave(data) {
+    // 更新选项数据
+    updateOptions() {
+      // 在这里更新选项数据
+      this.tableColumns.forEach(column => {
+        if (column.prop === 'landId') {
+          column.options = this.land
+        }
+        if (column.prop === 'farmId') {
+          column.options = this.user
+        }
+        if (column.prop === 'cropType') {
+          column.options = this.cropType
+        }
+      })
+    },
+    async getInfo() {
+      const res = await getPlanList(AgricultureCrop, this.page.pageNum, this.page.pageSize)
+      this.trackingData = res.data.list
+      this.page.totalNum = res.data.total
+    },
+    // 删除土地信息
+    async handleDelete(index) {
+      const res = await deletePlan(AgricultureCrop, [this.trackingData[index].trackingId])
+      if (res.code === 200) {
+        this.$message.success('删除成功')
+      } else {
+        this.$message.error('删除失败')
+      }
+      await this.getInfo()
+    },
+    // 保存土地信息
+    async handleSave(data) {
       // 根据数据中的信息进行保存操作，这里可以发送请求给后端或者进行其他操作
-      console.log('保存生长状况跟踪记录:', data);
+      const res = await updatePlan(AgricultureCrop, data)
+      if (res.code === 200) {
+        this.$message.success('更新成功')
+      } else {
+        this.$message.error('更新失败')
+      }
+      await this.getInfo()
     },
-    // 添加生长状况跟踪记录
-    handleAdd(data) {
-      // 将新增的生长状况跟踪记录添加到 trackingData 中
-      this.trackingData.push(data);
+    // 添加土地信息
+    async handleAdd(data) {
+      // 将新增的土地信息添加到 landData 中
+      console.log(data)
+      const res = await insertPlan(AgricultureCrop, data)
+      if (res.code === 200) {
+        this.$message.success('添加成功')
+      } else {
+        this.$message.error('添加失败')
+      }
+      await this.getInfo()
     },
-    // 处理当前页变化事件
     handleCurrentPageChange(currentPage) {
-      console.log(currentPage);
+      this.page.pageNum = currentPage
+      this.getInfo()
     },
     // 获取生长阶段选项
     getGrowthStageOptions() {

@@ -3,7 +3,7 @@
     <router-view/>
     <theme-picker/>
     <!-- 固定在右下角的按钮 -->
-    <div class="fixed-button-container">
+    <div  v-if="getToken()" class="fixed-button-container">
       <!-- 气泡效果 -->
       <el-popover
         v-model="showBubble"
@@ -29,6 +29,8 @@
 <script>
 import ThemePicker from '@/components/ThemePicker'
 import Chat from "@/components/Chat/index.vue";
+import { AIQuestion } from '@/api/data/getInfoData'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'App',
@@ -39,16 +41,11 @@ export default {
     }
   },
   methods: {
+    getToken,
     // 切换气泡的显示状态
-    sendMessage(message) {
-      // 模拟异步发送消息的过程
-      setTimeout(() => {
-        // 向 Chat 组件发送消息
-        this.$refs.chatRef.$emit('receive', { text: 'This is an automated response.', sender: 'response' })
-      }, 3000)
-
-      // 实际项目中，您可以在这里调用后端API发送消息
-      console.log("Message sent:", message);
+    async sendMessage(message) {
+      const res =  await AIQuestion(message.text)
+      this.$refs.chatRef.$emit('receive', { text: res.data, sender: 'response' })
     }
   },
   metaInfo() {

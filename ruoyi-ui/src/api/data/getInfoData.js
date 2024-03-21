@@ -13,13 +13,31 @@ export const MarketSales =["market","products","sales"]
 export const getPlanList = (routerArr,pageNum, pageSize) => {
   return request({
     url: `${splicingStrings(routerArr)}/${pageNum}/${pageSize}`,
-    method: 'get'
+    method: 'get',
   })
 }
 
+export const getShopList = (routerArr,pageNum, pageSize,p) => {
+  return request({
+    url: `${splicingStrings(routerArr)}/${pageNum}/${pageSize}`,
+    method: 'get',
+    params:{
+      p:p
+    }
+  })
+}
+export const getProductList = (routerArr,pageNum, pageSize,w) => {
+  return request({
+    url: `${splicingStrings(routerArr)}/${pageNum}/${pageSize}`,
+    method: 'get',
+    params:{
+      w:w
+    }
+  })
+}
 export const insertPlan = (routerArr,data) => {
   return request({
-    url: `${splicingStrings(routerArr)}`,
+    url: `${splicingStrings(routerArr)}/insert`,
     method: 'post',
     data: data
   })
@@ -38,5 +56,15 @@ export const updatePlan = (routerArr,data) => {
     url: `${splicingStrings(routerArr)}/update`,
     method: 'post',
     data: data
+  })
+}
+
+export const AIQuestion = (question) => {
+  return request({
+    url: `/agriculture/question`,
+    method: 'get',
+    params:{
+      q:question
+    }
   })
 }
