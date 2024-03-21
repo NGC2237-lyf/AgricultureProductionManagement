@@ -2,6 +2,7 @@ package com.management.utils;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;;
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;
@@ -27,9 +28,15 @@ public class CrawlerUtils {
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-            HtmlPage page = webClient.getPage(url);
+            Page page = webClient.getPage(url);
+            HtmlPage htmlPage = null;
+            if (page.isHtmlPage()) {
+                htmlPage = (HtmlPage) page;
+            } else {
+                return null;
+            }
             webClient.waitForBackgroundJavaScript(5000);
-            return Jsoup.parse(page.asXml());
+            return Jsoup.parse(htmlPage.asXml());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

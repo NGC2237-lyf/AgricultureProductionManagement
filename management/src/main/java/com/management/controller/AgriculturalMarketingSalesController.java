@@ -63,7 +63,7 @@ public class AgriculturalMarketingSalesController {
             queryWrapper.like("product_name", productName);
         }
         PageUtils.startPage(pageNum, pageSize);
-        List<AgriculturalProduct> agriculturalProducts = agriculturalProductService.getBaseMapper().selectList(null);
+        List<AgriculturalProduct> agriculturalProducts = agriculturalProductService.getBaseMapper().selectList(queryWrapper);
         PageUtils.clearPage();
         PageInfo<AgriculturalProduct> pageInfo = new PageInfo<>(agriculturalProducts);
         if (!ObjectUtils.isEmpty(agriculturalProducts)) {

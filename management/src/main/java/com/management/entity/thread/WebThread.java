@@ -15,12 +15,15 @@ import org.springframework.util.ObjectUtils;
 @Data
 public class WebThread extends Thread {
 
-    public static Elements boxes = null;
+    public static Elements boxes = new Elements();
     private String url = "";
 
     @Override
     public void run() {
         Document document = CrawlerUtils.fetch(url);
+        if (ObjectUtils.isEmpty(document)) {
+            return;
+        }
         Elements boxes = document.getElementsByClass("show-ctn");
         if (!ObjectUtils.isEmpty(boxes)) {
             WebThread.boxes = boxes;
