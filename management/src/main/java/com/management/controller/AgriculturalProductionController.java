@@ -96,8 +96,8 @@ public class AgriculturalProductionController {
     /*作物生长状况跟踪*/
 
     @PostMapping("/crop/insert")
-    public AjaxResult insertCropPlanting(@RequestBody List<CropGrowthTracking> cropGrowthTrackings) {
-        return cropGrowthTrackingService.saveBatch(cropGrowthTrackings) ? AjaxResult.success("添加成功") : AjaxResult.error("添加失败");
+    public AjaxResult insertCropPlanting(@RequestBody CropGrowthTracking cropGrowthTracking) {
+        return cropGrowthTrackingService.save(cropGrowthTracking) ? AjaxResult.success("添加成功") : AjaxResult.error("添加失败");
     }
 
     @PostMapping("/crop/delete")
