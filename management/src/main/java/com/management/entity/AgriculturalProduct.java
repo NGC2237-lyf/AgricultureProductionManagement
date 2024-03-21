@@ -19,12 +19,6 @@ public class AgriculturalProduct implements Serializable {
 
     private String productName;
 
-    private String category;
-
-    private String description;
-
-    private String origin;
-
     private Date harvestDate;
 
     private BigDecimal quantity;
@@ -55,9 +49,6 @@ public class AgriculturalProduct implements Serializable {
         AgriculturalProduct other = (AgriculturalProduct) that;
         return (this.getProductId() == null ? other.getProductId() == null : this.getProductId().equals(other.getProductId()))
             && (this.getProductName() == null ? other.getProductName() == null : this.getProductName().equals(other.getProductName()))
-            && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
-            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
-            && (this.getOrigin() == null ? other.getOrigin() == null : this.getOrigin().equals(other.getOrigin()))
             && (this.getHarvestDate() == null ? other.getHarvestDate() == null : this.getHarvestDate().equals(other.getHarvestDate()))
             && (this.getQuantity() == null ? other.getQuantity() == null : this.getQuantity().equals(other.getQuantity()))
             && (this.getUnit() == null ? other.getUnit() == null : this.getUnit().equals(other.getUnit()))
@@ -72,9 +63,6 @@ public class AgriculturalProduct implements Serializable {
         int result = 1;
         result = prime * result + ((getProductId() == null) ? 0 : getProductId().hashCode());
         result = prime * result + ((getProductName() == null) ? 0 : getProductName().hashCode());
-        result = prime * result + ((getCategory() == null) ? 0 : getCategory().hashCode());
-        result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
-        result = prime * result + ((getOrigin() == null) ? 0 : getOrigin().hashCode());
         result = prime * result + ((getHarvestDate() == null) ? 0 : getHarvestDate().hashCode());
         result = prime * result + ((getQuantity() == null) ? 0 : getQuantity().hashCode());
         result = prime * result + ((getUnit() == null) ? 0 : getUnit().hashCode());
@@ -92,9 +80,6 @@ public class AgriculturalProduct implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", productId=").append(productId);
         sb.append(", productName=").append(productName);
-        sb.append(", category=").append(category);
-        sb.append(", description=").append(description);
-        sb.append(", origin=").append(origin);
         sb.append(", harvestDate=").append(harvestDate);
         sb.append(", quantity=").append(quantity);
         sb.append(", unit=").append(unit);
