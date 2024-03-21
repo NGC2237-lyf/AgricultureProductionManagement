@@ -10,6 +10,7 @@
       :showSearch="true"
       @currentPageChange="handleCurrentPageChange"
       @search ='handleSearch'
+      :loading="loading"
     />
   </div>
 </template>
@@ -30,6 +31,7 @@ export default {
   data() {
     return {
       productPriceData: [],
+      loading: false,
       tableColumns: [
         { prop: 'productId', label: '产品编号', type: 'number' },
         { prop: 'productName', label: '产品名称', type: 'input' },
@@ -53,9 +55,11 @@ export default {
   },
   methods: {
     async getInfo(question) {
+      this.loading = true
       const res = await getShopList(MarketAdministration, this.page.pageNum, this.page.pageSize,question)
       this.productPriceData = res.data.list
       this.page.totalNum = res.data.total
+      this.loading = false
     },
     handleCurrentPageChange(currentPage) {
       this.page.pageNum = currentPage

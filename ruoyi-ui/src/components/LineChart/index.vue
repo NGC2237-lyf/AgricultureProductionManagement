@@ -28,16 +28,6 @@ export default {
       type: String,
       default: 'Combined Chart'
     },
-    // X 轴名称
-    xAxisName: {
-      type: String,
-      default: ''
-    },
-    // Y 轴名称
-    yAxisName: {
-      type: String,
-      default: ''
-    },
     // 是否启用动画
     animation: {
       type: Boolean,
@@ -87,8 +77,7 @@ export default {
         },
         // 网格配置
         grid: {
-          left: '3%',
-          right: '4%',
+          right: '10%',
           bottom: '3%',
           containLabel: true
         },
@@ -116,30 +105,18 @@ export default {
               type: 'dashed',
               color: '#ddd'
             }
-          }
+          },
+          // 确保柱子不压在 Y 轴上
+          min: 0
         },
         // 系列数据配置
         series: [
-          // {
-          //   name: '折线图',
-          //   type: 'line',
-          //   smooth: true,
-          //   symbol: 'circle',
-          //   symbolSize: 10,
-          //   itemStyle: {
-          //     color: '#ff6347'
-          //   },
-          //   areaStyle: {
-          //     color: 'rgba(255, 99, 71, 0.2)'
-          //   },
-          //   data: this.chartData.map(item => item.value)
-          // },
           {
             name: '柱状图',
             type: 'bar',
-            barWidth: '30%',
+            barWidth: '7%',
             itemStyle: {
-              color: '#6495ED'
+              color: '#15294d'
             },
             data: this.chartData.map(item => item.value * 1.5)
           }

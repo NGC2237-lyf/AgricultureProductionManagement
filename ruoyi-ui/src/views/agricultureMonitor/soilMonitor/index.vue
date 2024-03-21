@@ -1,7 +1,17 @@
 <template>
   <div>
     <!-- 使用土壤监测表格组件 -->
-    <Table title="土壤监测" :totalNum="page.totalNum" :columns="tableColumns" :data="soilTestData" @delete="handleDelete" @currentPageChange="handleCurrentPageChange" @save="handleSave" @add="handleAdd" />
+    <Table
+      title="土壤监测"
+      :totalNum="page.totalNum"
+      :columns="tableColumns"
+      :data="soilTestData"
+      @delete="handleDelete"
+      @currentPageChange="handleCurrentPageChange"
+      @save="handleSave"
+      @add="handleAdd"
+      :loading="loading"
+    />
   </div>
 </template>
 
@@ -21,6 +31,7 @@ export default {
         pageSize:10,
         totalNum:0,
       },
+      loading:false,
       tableColumns: [
         { prop: 'testId', label: '检测编号', type: 'number' ,close: true},
         { prop: 'location', label: '检测地块', type: 'select' },
@@ -73,9 +84,11 @@ export default {
       })
     },
     async getInfo() {
+      this.loading = true
       const res = await getPlanList(AgricultureSoil, this.page.pageNum, this.page.pageSize)
       this.soilTestData = res.data.list
       this.page.totalNum = res.data.total
+      this.loading = false
     },
     // 删除土地信息
     async handleDelete(index) {
