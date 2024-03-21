@@ -94,7 +94,7 @@ public class AgriculturalMarketingSalesController {
     /*农产品推荐*/
 
     @GetMapping("/products/price/{pageNum}/{pageSize}")
-    public AjaxResult getAllProductPrice(@RequestParam("w") String word,@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+    public AjaxResult getAllProductPrice(@RequestParam(value = "w",required = false) String word,@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
         PageUtils.startPage(pageNum, pageSize);
         if (!StringUtils.isEmpty(word)) {
             QueryWrapper<AgriculturalProductPrice> queryWrapper = new QueryWrapper<AgriculturalProductPrice>().like("product_name", word);

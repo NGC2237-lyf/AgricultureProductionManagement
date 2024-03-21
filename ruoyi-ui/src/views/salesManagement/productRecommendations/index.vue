@@ -9,6 +9,8 @@
       :showSearch="true"
       @currentPageChange="handleCurrentPageChange"
       @search ='handleSearch'
+      :loading="loading"
+      :loadingText ="loadingText"
       />
   </div>
 </template>
@@ -29,6 +31,8 @@ export default {
   data() {
     return {
       soilTestData: [],
+      loading:false,
+      loadingText:"",
       page:{
         pageNum:1,
         pageSize:10,
@@ -36,11 +40,12 @@ export default {
       },
       question :"",
       tableColumns: [
+        { prop: 'productId', label: '产品编号', type: 'number' ,close: true},
         { prop: 'productName', label: '产品名称', type: 'input' },
         { prop: 'description', label: '描述', type: 'input' },
         { prop: 'price', label: '新鲜小麦价格', type: 'number' },
         { prop: 'unit', label: '单位', type: 'input' },
-        { prop: 'productId', label: '产品编号', type: 'number' },
+
       ],
     };
   },
@@ -49,9 +54,13 @@ export default {
   },
   methods: {
     async getInfo(question) {
+      this.loading = true
+      this.loadingText = "正在查询请稍后"
       const res = await getProductList(MarketRecommendation, this.page.pageNum, this.page.pageSize,question)
-      this.soilTestData = res.data.list
-      this.page.totalNum = res.data.total
+      console.log(res)
+      this.soilTestData = res.data.list || res.data
+      this.page.totalNum = res.data.total || 0
+      this.loading = false
     },
     handleCurrentPageChange(currentPage) {
       this.page.pageNum = currentPage
@@ -59,7 +68,9 @@ export default {
     },
     async handleSearch(data){
       console.log(data)
+
       await this.getInfo(data)
+
     }
   }
 };
