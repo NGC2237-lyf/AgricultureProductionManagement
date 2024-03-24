@@ -27,7 +27,7 @@
         <div>
           <line-chart
             :chart-width="'70vw'"
-            :chart-height="'500px'"
+            :chart-height="'600px'"
             :chart-data="chartData"
             :chart-title="'销售额趋势图'"
             :x-axis-name="'月份'"

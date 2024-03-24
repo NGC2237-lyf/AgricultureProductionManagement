@@ -3,6 +3,7 @@
     <!-- 使用作物种植计划表格组件 -->
     <Table title="作物种植计划" :totalNum="page.totalNum" :columns="tableColumns" :data="planData"
            @delete="handleDelete" @currentpagechange="handleCurrentPageChange" @save="handleSave" @add="handleAdd"
+           :loading="loading"
     />
   </div>
 </template>
@@ -24,6 +25,7 @@ export default {
         pageSize: 10,
         totalNum: 0
       },
+      loading:false,
       tableColumns: [
         { prop: 'planId', label: '计划编号', type: 'input', close: true },
         { prop: 'farmId', label: '农场/农户编号', type: 'select' },
@@ -80,9 +82,11 @@ export default {
       })
     },
     async getInfo() {
+      this.loading = true
       const res = await getPlanList(CropPlanting, this.page.pageNum, this.page.pageSize)
       this.planData = res.data.list
       this.page.totalNum = res.data.total
+      this.loading = false
     },
     // 删除土地信息
     async handleDelete(index) {

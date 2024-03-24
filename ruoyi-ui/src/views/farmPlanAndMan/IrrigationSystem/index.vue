@@ -10,6 +10,7 @@
       @currentpagechange="handleCurrentPageChange"
       @save="handleSave"
       @add="handleAdd"
+      :loading="loading"
     />
   </div>
 </template>
@@ -31,6 +32,7 @@ export default {
         pageSize: 10,
         totalNum: 0
       },
+      loading:false,
       tableColumns: [ // 表格列配置
         { prop: 'irrigationId', label: '跟踪编号', type: 'input', close: true },
         { prop: 'farmId', label: '农场/农户编号', type: 'select' },
@@ -76,9 +78,11 @@ export default {
       })
     },
     async getInfo() {
+      this.loading = true
       const res = await getPlanList(IrrigationRecord, this.page.pageNum, this.page.pageSize)
       this.irrigationSystemData = res.data.list
       this.page.totalNum = res.data.total
+      this.loading = false
     },
     // 删除土地信息
     async handleDelete(index) {

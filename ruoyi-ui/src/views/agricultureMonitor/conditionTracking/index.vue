@@ -1,7 +1,17 @@
 <template>
   <div>
     <!-- 使用生长状况跟踪表格组件 -->
-    <Table title="生长状况跟踪" :totalNum="page.totalNum" :columns="tableColumns" :data="trackingData" @delete="handleDelete" @currentPageChange="handleCurrentPageChange" @save="handleSave" @add="handleAdd" />
+    <Table
+      title="生长状况跟踪"
+      :totalNum="page.totalNum"
+      :columns="tableColumns"
+      :data="trackingData"
+      @delete="handleDelete"
+      @currentPageChange="handleCurrentPageChange"
+      @save="handleSave"
+      @add="handleAdd"
+      :loading="loading"
+    />
   </div>
 </template>
 
@@ -22,6 +32,7 @@ export default {
         pageSize:10,
         totalNum:0,
       },
+      loading:false,
       tableColumns: [
         { prop: 'trackingId', label: '跟踪编号', type: 'number',close:true },
         { prop: 'farmId', label: '农场/农户编号', type: 'select' },
@@ -86,9 +97,11 @@ export default {
       })
     },
     async getInfo() {
+      this.loading =true
       const res = await getPlanList(AgricultureCrop, this.page.pageNum, this.page.pageSize)
       this.trackingData = res.data.list
       this.page.totalNum = res.data.total
+      this.loading = false
     },
     // 删除土地信息
     async handleDelete(index) {

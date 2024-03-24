@@ -1,6 +1,7 @@
 <template>
   <div class="parent-component">
     <line-chart
+      style="float: left"
       :chart-width="'800px'"
       :chart-height="'500px'"
       :chart-data="totalPrice"
@@ -10,6 +11,7 @@
       :animation="true"
     ></line-chart>
     <line-chart
+      style="float: left;margin-left: 100px"
       :chart-width="'800px'"
       :chart-height="'500px'"
       :chart-data="quantity"
@@ -19,6 +21,7 @@
       :animation="true"
     ></line-chart>
     <line-chart
+      style="float: left"
       :chart-width="'800px'"
       :chart-height="'500px'"
       :chart-data="unitPrice"

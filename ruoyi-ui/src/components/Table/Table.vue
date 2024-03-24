@@ -9,7 +9,7 @@
     <!-- 添加按钮 -->
     <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit">{{ '添加' + this.title }}
     </el-button>
-    <div v-if="loading" style="width: 100%;height: 400px;text-align: center;line-height: 400px;">
+    <div v-if="loading" style="width: 100%;height: 400px;text-align: center;line-height: 400px;color:#909399">
       <div style="display: inline-block;line-height: normal">
         <i class="el-icon-loading" style="font-size: 40px"></i>
         <p style="font-size: 20px">{{loadingText}}</p>
@@ -18,7 +18,7 @@
     <div v-if="!loading">
       <el-empty v-if="currentPageData.length ===0 "></el-empty>
       <el-table v-if="currentPageData.length !==0 " :data="currentPageData" class="table">
-        <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.prop === null?column.prop:'无'"
+        <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.prop"
                          :label="column.label"
         ></el-table-column>
         <el-table-column label="操作" v-if="showEdit">
