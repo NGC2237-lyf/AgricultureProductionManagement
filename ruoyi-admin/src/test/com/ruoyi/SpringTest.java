@@ -2,6 +2,11 @@ package com.ruoyi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.management.controller.AgriculturalProductionController;
 import com.management.entity.CropGrowthTracking;
 import com.management.entity.SoilTestData;
@@ -12,10 +17,15 @@ import com.management.service.impl.AgriculturalProductServiceImpl;
 import com.management.service.impl.SoilTestDataServiceImpl;
 import com.management.utils.ChatGgtUtils;
 import com.management.utils.CrawlerUtils;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Set;
 
 /**
  * @author TokisakiKurumi
@@ -64,7 +74,23 @@ public class SpringTest {
 
     @Test
     void testFetch() {
-        System.out.println(agriculturalProductService.findData("青菜"));
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
+        try {
+            webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setActiveXNative(false);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+            webClient.waitForBackgroundJavaScript(5000);
+            webClient.getCookieManager().setCookiesEnabled(true);
+            HtmlPage page = webClient.getPage("https://www.cnhnb.com/p/xbc");
+            System.out.println(Jsoup.parse(page.asXml()).getElementsByClass("show-ctn"));
+        } catch (IOException e) {
+
+        } finally {
+            webClient.close();
+        }
     }
 
     @Test

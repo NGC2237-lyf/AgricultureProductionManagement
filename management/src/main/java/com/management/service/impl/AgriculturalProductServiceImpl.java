@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,8 +48,20 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
 
     public void findData(AgriculturalProduct product) {
         String pinYin = PinYinUtils.toChinesePinYin(product.getProductName());
-        Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
-        Elements boxes = document.getElementsByClass("show-ctn");
+        char[] chars = product.getProductName().toCharArray();
+        String pinYinM = "";
+        for (int i = 0; i < chars.length; i++) {
+            pinYinM += PinYinUtils.toChinesePinYin(String.valueOf(chars[i])).substring(0, 1);
+        }
+        Elements boxes;
+        WebThread webThread1 = new WebThread("https://www.cnhnb.com/p/" + pinYin);
+        WebThread webThread2 = new WebThread("https://www.cnhnb.com/p/" + pinYinM);
+        webThread1.start();
+        webThread2.start();
+        while (webThread1.isAlive() || webThread2.isAlive()) {
+        }
+        boxes = WebThread.boxes;
+        WebThread.boxes = null;
         if (!boxes.isEmpty()) {
             for (int i = 0; i < boxes.size(); i++) {
                 if (!boxes.get(i).getElementsByTag("h2").html().contains(product.getProductName())) {
@@ -79,25 +92,24 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
         for (int i = 0; i < chars.length; i++) {
             pinYinM += PinYinUtils.toChinesePinYin(String.valueOf(chars[i])).substring(0, 1);
         }
+        Elements boxes;
         List<AgriculturalProductPrice> agriculturalProductPrices = new ArrayList<>();
-        WebThread webThread1 = new WebThread("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
-        WebThread webThread2 = new WebThread("https://www.cnhnb.com/p/" + pinYinM + "-0-84-0-0-1/");
-        WebThread webThread3 = new WebThread("https://www.cnhnb.com/supply/search/" + "?k=" + word);
-        Elements boxes = null;
+        WebThread webThread1 = new WebThread("https://www.cnhnb.com/p/" + pinYin);
+        WebThread webThread2 = new WebThread("https://www.cnhnb.com/p/" + pinYinM);
         webThread1.start();
         webThread2.start();
-        webThread3.start();
-        while (webThread1.isAlive() || webThread2.isAlive() || webThread3.isAlive()) {
-            boxes = WebThread.boxes;
+        while (webThread1.isAlive() || webThread2.isAlive()) {
         }
-        if (!boxes.isEmpty()) {
+        boxes = WebThread.boxes;
+        WebThread.boxes = null;
+        if (!ObjectUtils.isEmpty(boxes)) {
             for (int i = 0; i < boxes.size(); i++) {
                 if (!boxes.get(i).getElementsByTag("h2").html().contains(word)) {
                     boxes.remove(i);
                 }
             }
         }
-        if (!boxes.isEmpty()) {
+        if (!ObjectUtils.isEmpty(boxes)) {
             for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
                 BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
                 String unit = boxes.get(i).getElementsByClass("shops-price").text();
@@ -116,8 +128,10 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
     public void updateData(Integer productId, String word) {
         String pinYin = PinYinUtils.toChinesePinYin(word);
         List<AgriculturalProductPrice> agriculturalProductPrices = new ArrayList<>();
-        Document document = CrawlerUtils.fetch("https://www.cnhnb.com/p/" + pinYin + "-0-84-0-0-1/");
-        Elements boxes = document.getElementsByClass("show-ctn");
+        WebThread webThread = new WebThread("https://www.cnhnb.com/p/" + pinYin);
+        webThread.start();
+        Elements boxes = WebThread.boxes;
+        WebThread.boxes = null;
         if (!boxes.isEmpty()) {
             for (int i = 0; i < boxes.size(); i++) {
                 if (!boxes.get(i).getElementsByTag("h2").html().contains(word)) {

@@ -20,7 +20,7 @@ public class CrawlerUtils {
 
     private static WebClient webClient = new WebClient(BrowserVersion.FIREFOX);
 
-    public static Document fetch(String url) {
+    public static Document fetch(String url) throws IOException {
         try {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
@@ -28,20 +28,16 @@ public class CrawlerUtils {
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-            Page page = webClient.getPage(url);
-            HtmlPage htmlPage = null;
-            if (page.isHtmlPage()) {
-                htmlPage = (HtmlPage) page;
-            } else {
+            HtmlPage page = webClient.getPage(url);
+            if (!page.isHtmlPage()) {
                 return null;
             }
             webClient.waitForBackgroundJavaScript(5000);
-            return Jsoup.parse(htmlPage.asXml());
+            return Jsoup.parse(page.asXml());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             webClient.close();
         }
-        return null;
     }
 }

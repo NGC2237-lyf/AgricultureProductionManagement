@@ -123,7 +123,7 @@ export default {
       pageSize: 10,
       isEditMode: false, // 编辑模式标志
       deleteIndex: null, // 要删除的数据的索引
-      searchData: ' '
+      searchData: ''
     }
   },
   computed: {

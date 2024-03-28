@@ -51,7 +51,7 @@ export default {
     }
   },
   async created() {
-    await this.getInfo(" ")
+    await this.getInfo("")
   },
   methods: {
     async getInfo(question) {
