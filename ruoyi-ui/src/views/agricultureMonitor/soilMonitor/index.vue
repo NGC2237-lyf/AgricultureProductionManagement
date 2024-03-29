@@ -6,6 +6,7 @@
       :totalNum="page.totalNum"
       :columns="tableColumns"
       :data="soilTestData"
+      :show-edit="true"
       @delete="handleDelete"
       @currentPageChange="handleCurrentPageChange"
       @save="handleSave"

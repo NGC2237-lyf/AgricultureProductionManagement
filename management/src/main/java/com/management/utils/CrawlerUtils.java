@@ -18,9 +18,9 @@ import java.io.IOException;
  **/
 public class CrawlerUtils {
 
-    private static WebClient webClient = new WebClient(BrowserVersion.FIREFOX);
 
     public static Document fetch(String url) throws IOException {
+        WebClient webClient = new WebClient(BrowserVersion.CHROME);
         try {
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);

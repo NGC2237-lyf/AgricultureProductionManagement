@@ -72,7 +72,7 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
         if (!boxes.isEmpty()) {
             for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
                 BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
-                String unit = boxes.get(i).getElementsByClass("shops-price").text();
+                String unit = boxes.get(i).getElementsByClass("shops-price").text().split("/")[1];
                 String description = boxes.get(i).getElementsByTag("h2").text();
                 AgriculturalProductPrice agriculturalProductPrice = new AgriculturalProductPrice();
                 agriculturalProductPrice.setProductId(product.getProductId());
@@ -112,7 +112,7 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
         if (!ObjectUtils.isEmpty(boxes)) {
             for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
                 BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
-                String unit = boxes.get(i).getElementsByClass("shops-price").text();
+                String unit = boxes.get(i).getElementsByClass("shops-price").text().split("/")[1];
                 String description = boxes.get(i).getElementsByTag("h2").text();
                 AgriculturalProductPrice agriculturalProductPrice = new AgriculturalProductPrice();
                 agriculturalProductPrice.setProductName(word);
@@ -142,7 +142,7 @@ public class AgriculturalProductServiceImpl extends ServiceImpl<AgriculturalProd
         if (!boxes.isEmpty()) {
             for (int i = 0; i < Math.min(boxes.size(), 5); i++) {
                 BigDecimal price = new BigDecimal(boxes.get(i).getElementsByClass("sp1").text());
-                String unit = boxes.get(i).getElementsByClass("shops-price").text();
+                String unit = boxes.get(i).getElementsByClass("shops-price").text().split("/")[1];
                 String description = boxes.get(i).getElementsByTag("h2").text();
                 AgriculturalProductPrice agriculturalProductPrice = new AgriculturalProductPrice();
                 agriculturalProductPrice.setProductName(word);

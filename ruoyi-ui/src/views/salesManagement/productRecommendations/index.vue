@@ -1,7 +1,7 @@
 <template>
   <div>
     <Table
-      title="农产品价格推荐"
+      title="农产品推荐价格"
       :totalNum="page.totalNum"
       :columns="tableColumns"
       :data="soilTestData"
@@ -40,10 +40,10 @@ export default {
       },
       question :"",
       tableColumns: [
-        { prop: 'productId', label: '产品编号', type: 'number' ,close: true},
+        { prop: 'productId', label: '产品编号', type: 'number' ,close: true,display:false},
         { prop: 'productName', label: '产品名称', type: 'input' },
         { prop: 'description', label: '描述', type: 'input' },
-        { prop: 'price', label: '新鲜小麦价格', type: 'number' },
+        { prop: 'price', label: '价格', type: 'number' },
         { prop: 'unit', label: '单位', type: 'input' },
 
       ],
@@ -57,9 +57,18 @@ export default {
       this.loading = true
       this.loadingText = "正在查询请稍后"
       const res = await getProductList(MarketRecommendation, this.page.pageNum, this.page.pageSize,question)
-      console.log(res)
-      this.soilTestData = res.data.list || res.data
-      this.page.totalNum = res.data.total || 0
+      this.soilTestData = res.data ?res.data.list || res.data : []
+      this.page.totalNum =res.data ? res.data.total || 0 :0
+      if(res.data){
+        if (!res.data.list){
+          this.tableColumns.forEach(item => {
+            if (item.prop === 'productId') {
+              item.display = true
+            }
+
+          })
+        }
+      }
       this.loading = false
     },
     handleCurrentPageChange(currentPage) {
@@ -67,8 +76,6 @@ export default {
       this.getInfo(this.question)
     },
     async handleSearch(data){
-      console.log(data)
-
       await this.getInfo(data)
 
     }

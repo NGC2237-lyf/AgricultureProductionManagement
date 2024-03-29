@@ -4,10 +4,12 @@
       <el-input style="width: 400px" v-model="searchData"></el-input>
       <el-button style="margin-left: 20px" type="primary" icon="el-icon-search" @click="search"> 搜素</el-button>
       <el-button @click="reset" icon="el-icon-refresh-left">重置</el-button>
+      <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit">{{ '添加' + this.title }}
+      </el-button>
     </div>
 
     <!-- 添加按钮 -->
-    <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit">{{ '添加' + this.title }}
+    <el-button type="primary" class="button" @click="showAddDialog" v-if="showEdit &&!this.showSearch">{{ '添加' + this.title }}
     </el-button>
     <div v-if="loading" style="width: 100%;height: 400px;text-align: center;line-height: 400px;color:#909399">
       <div style="display: inline-block;line-height: normal">
@@ -18,7 +20,7 @@
     <div v-if="!loading">
       <el-empty v-if="currentPageData.length ===0 "></el-empty>
       <el-table v-if="currentPageData.length !==0 " :data="currentPageData" class="table">
-        <el-table-column v-for="(column, index) in columns" :key="index" :prop="column.prop"
+        <el-table-column v-for="(column, index) in columns" v-if="!column.display" :key="index" :prop="column.prop"
                          :label="column.label"
         ></el-table-column>
         <el-table-column label="操作" v-if="showEdit">
@@ -147,7 +149,7 @@ export default {
       // 处理搜索逻辑
     },
     reset() {
-      this.searchData = ' '
+      this.searchData = ''
       this.$emit('search', this.searchData)
     },
     // 保存表单数据

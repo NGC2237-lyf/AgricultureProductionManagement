@@ -102,7 +102,7 @@ public class AgriculturalMarketingSalesController {
             PageUtils.clearPage();
             if (list.isEmpty()) {
                 List<AgriculturalProductPrice> productPrices = agriculturalProductService.findData(word);
-                return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.warn("请换个名称试试!");
+                return !ObjectUtils.isEmpty(productPrices) ? AjaxResult.success("查询成功", productPrices) : AjaxResult.success("请换个名称试试!");
             }
             PageInfo<AgriculturalProductPrice> pageInfo = new PageInfo<>(list);
             return !ObjectUtils.isEmpty(pageInfo.getList()) ? AjaxResult.success("查询成功", pageInfo) : AjaxResult.error("查询失败");

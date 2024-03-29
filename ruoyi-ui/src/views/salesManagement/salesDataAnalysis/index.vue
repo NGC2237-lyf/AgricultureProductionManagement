@@ -62,12 +62,18 @@ export default {
       this.totalPrice = res.data.list.map(item => {
         return {name: item.productName, value: item.totalPrice }
       })
+      this.totalPrice.unshift({name: '', value: 0})
+      this.totalPrice.push({name: '', value: 0})
       this.quantity = res.data.list.map(item => {
         return {name: item.productName, value: item.quantity }
       })
+      this.quantity.unshift({name: '', value: 0})
+      this.quantity.push({name: '', value: 0})
       this.unitPrice = res.data.list.map(item => {
         return {name: item.productName, value: item.unitPrice }
       })
+      this.unitPrice.unshift({name: '', value: 0})
+      this.unitPrice.push({name: '', value: 0})
     },
   }
 };

@@ -100,7 +100,8 @@ export default {
       this.chartData = res.data.list.map(item => {
         return { name: item.productName, value: item.totalPrice }
       })
-
+      this.chartData.unshift({name: '', value: 0})
+      this.chartData.push({name: '', value: 0})
     },
     async fetchWeatherData() {
       // 模拟天气数据获取

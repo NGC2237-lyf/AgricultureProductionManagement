@@ -6,6 +6,7 @@
       :totalNum="page.totalNum"
       :columns="tableColumns"
       :data="trackingData"
+      :show-edit="true"
       @delete="handleDelete"
       @currentPageChange="handleCurrentPageChange"
       @save="handleSave"
