@@ -65,8 +65,8 @@ public class FarmPlaningController {
     }
 
     @PostMapping("/land/insert")
-    public AjaxResult insertLand(@RequestBody List<Land> lands) {
-        return landService.saveBatch(lands)?AjaxResult.success("成功"):AjaxResult.error("失败");
+    public AjaxResult insertLand(@RequestBody Land land) {
+        return landService.save(land)?AjaxResult.success("成功"):AjaxResult.error("失败");
     }
 
     /*作物种植计划*/
